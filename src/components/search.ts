@@ -1,4 +1,4 @@
-import { searchMovies } from "../lib/store";
+
 
 // Komponent för sökning
 export function createInput({

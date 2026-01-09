@@ -1,4 +1,5 @@
 import type { TMDBMovie } from "../../types/movie";
+import type { ViewElement } from "../../types/view";
 
 // En enkel vy som visar en hårdkodad film med information om filmen.
 // Använder typescript för att definiera filmens egenskaper.
@@ -11,7 +12,7 @@ const demoMovie: TMDBMovie = {
 };
 
 
-export default function about() {
+export default function about(): ViewElement {
   const about = document.createElement("div");
   about.classList.add("about");
 
@@ -29,6 +30,10 @@ export default function about() {
     </section>
   `;
 
+  // No event listeners to clean up currently, but add cleanup for consistency
+  (about as ViewElement).cleanup = () => {
+    // No cleanup needed currently
+  };
 
   return about;
 }

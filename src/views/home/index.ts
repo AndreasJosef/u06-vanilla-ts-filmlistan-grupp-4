@@ -1,12 +1,11 @@
-import type { TMDBMovie } from "../../types/movie";
-
 import { getState, searchMovies, type AppState } from "../../lib/store";
 import { loadPopularMovies } from "../../lib/store";
+import type { ViewElement } from "../../types/view";
 
 import { createInput } from "../../components/search";
 
 
-export default function home(state: AppState) {
+export default function home(state: AppState): ViewElement {
   const home = document.createElement("div");
   const { popularMovies, searchResult } = state;
 
@@ -37,14 +36,20 @@ export default function home(state: AppState) {
 
   home.prepend(searchInput);
 
-  const inputEl = searchInput.querySelector('input') as HTMLInputElement
+const inputEl = searchInput.querySelector('input') as HTMLInputElement;
 
-  inputEl.addEventListener('keypress', e => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' && inputEl.value !== '') {
+      searchMovies(inputEl.value.trim());
+    }
+  };
 
-      if (e.key === 'Enter' && inputEl.value !== '') {
-        searchMovies(inputEl.value.trim())
-      }
-  })
+  inputEl.addEventListener('keypress', handleKeyPress);
+
+  // Attach cleanup function to properly remove event listener
+  (home as ViewElement).cleanup = () => {
+    inputEl.removeEventListener('keypress', handleKeyPress);
+  };
 
   return home;
 }

@@ -1,7 +1,6 @@
-import type { TMDBMovie } from "./types/movie.ts";
-
 import "./style.css";
 import { type AppState, setRenderCallback, getState } from "./lib/store.ts";
+import type { ViewCleanup, ViewComponent } from "./types/view.ts";
 
 // Statiska sidor
 // måste refererera till den specifika .html filen med "?raw" för att kunna läsas in
@@ -12,7 +11,10 @@ import footerHTML from "./views/static/footer/index.html?raw";
 import about from "./views/about/index.ts";
 import home from "./views/home/index.ts";
 
-const currentPage = (state: AppState): string | HTMLElement => {
+// Track current view cleanup function
+let currentViewCleanup: ViewCleanup | null = null;
+
+const currentPage = (state: AppState): ReturnType<ViewComponent> => {
   const path = window.location.pathname;
    switch (path) {
     case "/":
@@ -28,29 +30,29 @@ const app = document.querySelector("#app")!;
 
 // Funktionen som renderar sidan
 const renderApp = () => {
+  // Cleanup previous view before rendering new one
+  if (currentViewCleanup) {
+    currentViewCleanup();
+    currentViewCleanup = null;
+  }
 
   const page = currentPage(getState());
     
   if(typeof page === "string") {
-
-
     app.innerHTML = `
           ${headerHTML} 
           ${page} 
           ${footerHTML}`;
 
   } else {
-
-
-    app.innerHTML = 
-    `${headerHTML} 
-     ${footerHTML}`;
-
-     app.insertBefore(page, app.querySelector("footer")!);
-
+    app.innerHTML = `${headerHTML} ${footerHTML}`;
+    app.insertBefore(page, app.querySelector("footer")!);
+    
+    // Store cleanup function if available
+    if (page && typeof page === 'object' && 'cleanup' in page && page.cleanup) {
+      currentViewCleanup = page.cleanup;
+    }
   }
-
-
 };
 
 // Initialisera appen
