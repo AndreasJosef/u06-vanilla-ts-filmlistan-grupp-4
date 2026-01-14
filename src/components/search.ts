@@ -1,5 +1,3 @@
-
-
 // Komponent för sökning
 export function createInput({
   type,
@@ -12,11 +10,9 @@ export function createInput({
   label: string;
   classes?: string;
 }) {
-
   // Create
   const inputContainer = document.createElement("fieldset");
   inputContainer.className = classes;
-
 
   // Template
   inputContainer.innerHTML = `
@@ -26,3 +22,4 @@ export function createInput({
 
   return inputContainer;
 }
+
