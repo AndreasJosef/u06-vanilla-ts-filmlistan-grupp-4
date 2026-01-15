@@ -8,7 +8,6 @@ import headerHTML from "./views/static/header/index.html?raw";
 import footerHTML from "./views/static/footer/index.html?raw";
 
 // Dynamiska sidor
-import about from "./views/about/index.ts";
 import home from "./views/home/index.ts";
 
 // Track current view cleanup function
@@ -16,11 +15,9 @@ let currentViewCleanup: ViewCleanup | null = null;
 
 const currentPage = (state: AppState): ReturnType<ViewComponent> => {
   const path = window.location.pathname;
-   switch (path) {
+  switch (path) {
     case "/":
       return home(state);
-    case "/about":
-      return about();
     default:
       return "404";
   }
@@ -37,19 +34,18 @@ const renderApp = () => {
   }
 
   const page = currentPage(getState());
-    
-  if(typeof page === "string") {
+
+  if (typeof page === "string") {
     app.innerHTML = `
           ${headerHTML} 
           ${page} 
           ${footerHTML}`;
-
   } else {
     app.innerHTML = `${headerHTML} ${footerHTML}`;
     app.insertBefore(page, app.querySelector("footer")!);
-    
+
     // Store cleanup function if available
-    if (page && typeof page === 'object' && 'cleanup' in page && page.cleanup) {
+    if (page && typeof page === "object" && "cleanup" in page && page.cleanup) {
       currentViewCleanup = page.cleanup;
     }
   }
@@ -58,7 +54,7 @@ const renderApp = () => {
 // Initialisera appen
 renderApp();
 
-// Rerender-logic 
+// Rerender-logic
 // Om sidan ändras, rerenderas appen
 window.addEventListener("popstate", () => {
   renderApp();
@@ -69,7 +65,7 @@ window.addEventListener("popstate", () => {
 document.addEventListener("click", (e) => {
   const target = e.target as HTMLElement;
   const link = target.closest("a");
-  
+
   if (link && link.href.startsWith(window.location.origin)) {
     e.preventDefault();
     const path = new URL(link.href).pathname;
@@ -80,3 +76,4 @@ document.addEventListener("click", (e) => {
 
 // Set render callback
 setRenderCallback(renderApp);
+
