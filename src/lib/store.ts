@@ -1,9 +1,11 @@
+import { getWatchlist } from "../services/movieApi";
 import { TMDB } from "../services/tmdbApi";
-import type { TMDBMovie } from "../types/movie";
+import type { DatabaseMovie, TMDBMovie } from "../types/movie";
 
 export interface AppState {
-  popularMovies: TMDBMovie[],
-  searchResult: TMDBMovie[] | null
+  popularMovies: TMDBMovie[];
+  searchResult: TMDBMovie[] | null;
+  watchlist: DatabaseMovie[];
 }
 
 class Store {
@@ -14,14 +16,15 @@ class Store {
     this.renderCallback = () => {};
     this.state = {
       popularMovies: [],
-      searchResult: null
-    }
+      searchResult: null,
+      watchlist: [],
+    };
   }
 
   getState(): AppState {
-    return { ...this.state }
+    return { ...this.state };
   }
-  
+
   async loadPopularMovies(shouldTriggerRender: boolean = true) {
     if (this.state.popularMovies.length) return;
 
@@ -31,7 +34,6 @@ class Store {
       if (shouldTriggerRender) {
         this.triggerRender();
       }
-
     } catch (error) {
       console.error("Failed to load popular movies:", error);
     }
@@ -42,8 +44,15 @@ class Store {
     this.triggerRender();
   }
 
+  async loadWatchlist() {
+    if (this.state.watchlist.length) return;
+    this.state.watchlist = await getWatchlist();
+    console.log(this.state.watchlist);
+    this.triggerRender();
+  }
+
   // ========== RENDER CALLBACK ==========
-  
+
   setRenderCallback(renderApp: () => void) {
     this.renderCallback = renderApp;
   }
@@ -57,8 +66,9 @@ class Store {
 
 const store = new Store();
 
-
-export const searchMovies = store.searchMovies.bind(store);  // Async
-export const loadPopularMovies = store.loadPopularMovies.bind(store);  // Async
+export const loadWatchlist = store.loadWatchlist.bind(store); // Async
+export const searchMovies = store.searchMovies.bind(store); // Async
+export const loadPopularMovies = store.loadPopularMovies.bind(store); // Async
 export const setRenderCallback = store.setRenderCallback.bind(store);
 export const getState = store.getState.bind(store);
+

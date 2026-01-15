@@ -9,6 +9,7 @@ import footerHTML from "./views/static/footer/index.html?raw";
 
 // Dynamiska sidor
 import home from "./views/home/index.ts";
+import watchlist from "./views/watchlist/index.ts";
 
 // Track current view cleanup function
 let currentViewCleanup: ViewCleanup | null = null;
@@ -18,6 +19,8 @@ const currentPage = (state: AppState): ReturnType<ViewComponent> => {
   switch (path) {
     case "/":
       return home(state);
+    case "/watchlist":
+      return watchlist(state);
     default:
       return "404";
   }
@@ -76,4 +79,3 @@ document.addEventListener("click", (e) => {
 
 // Set render callback
 setRenderCallback(renderApp);
-
