@@ -1,4 +1,4 @@
-type MovieStatus = "watchlist" | "watched";
+export type MovieStatus = "watchlist" | "watched";
 
 export interface TMDBMovie {
   id: number;

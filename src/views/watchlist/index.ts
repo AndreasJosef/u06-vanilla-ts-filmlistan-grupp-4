@@ -5,7 +5,7 @@ export default function watchlist(state: AppState): ViewElement {
   const watchlistEl = document.createElement("div");
   const { watchlist } = state;
 
-  loadWatchlist();
+  loadWatchlist("watchlist");
 
   watchlistEl.innerHTML = `
     <section>
