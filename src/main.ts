@@ -8,8 +8,8 @@ import headerHTML from "./views/static/header/index.html?raw";
 import footerHTML from "./views/static/footer/index.html?raw";
 
 // Dynamiska sidor
-import home from "./views/home/index.ts";
-import watchlist from "./views/watchlist/index.ts";
+import homeView from "./views/home/index.ts";
+import watchlistView from "./views/watchlist/index.ts";
 
 // Track current view cleanup function
 let currentViewCleanup: ViewCleanup | null = null;
@@ -18,9 +18,9 @@ const currentPage = (state: AppState): ReturnType<ViewComponent> => {
   const path = window.location.pathname;
   switch (path) {
     case "/":
-      return home(state);
+      return homeView(state);
     case "/watchlist":
-      return watchlist(state);
+      return watchlistView(state);
     default:
       return "404";
   }
