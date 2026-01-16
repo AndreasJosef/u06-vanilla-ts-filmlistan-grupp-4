@@ -6,8 +6,8 @@ export interface TMDBMovie {
 }
 
 export interface DatabaseMovie {
-  id: number; // Databas-id
-  tmdb_id: number; // TMDB-id
+  id: number;
+  tmdb_id: number;
   title: string;
   poster_path: string | null;
   release_date: string | null;
