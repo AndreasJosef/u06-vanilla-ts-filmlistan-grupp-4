@@ -1,7 +1,11 @@
-import { getState, searchMovies, type AppState } from "../../lib/store";
-import { loadPopularMovies } from "../../lib/store";
-import type { ViewElement } from "../../types/view";
+import {
+  type AppState,
+  getState,
+  searchMovies,
+  loadPopularMovies,
+} from "../../lib/store";
 
+import type { ViewElement } from "../../types/view";
 import { createInput } from "../../components/search";
 
 export default function home(state: AppState): ViewElement {
@@ -52,4 +56,3 @@ export default function home(state: AppState): ViewElement {
 
   return home;
 }
-
