@@ -7,6 +7,7 @@ export default function watchlist(state: AppState): ViewElement {
 
   loadWatchlist("watchlist");
 
+  // TODO: Replace h1>movie.title with an a MovieCard component
   watchlistEl.innerHTML = `
     <section>
       <h2>Watchlist</h2>
