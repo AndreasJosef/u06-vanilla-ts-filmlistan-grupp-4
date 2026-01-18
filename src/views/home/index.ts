@@ -3,10 +3,10 @@ import {
   getState,
   searchMovies,
   loadPopularMovies,
-} from "../../lib/store";
+} from "../../store";
 
-import type { ViewElement } from "../../types/view";
-import { createInput } from "../../components/search";
+import type { ViewElement } from "../view";
+import { createInput } from "../../app/catalog/components/search";
 
 export default function home(state: AppState): ViewElement {
   const home = document.createElement("div");
@@ -27,7 +27,7 @@ export default function home(state: AppState): ViewElement {
   home.innerHTML = `
     <section>
       <!-- Search -->
-
+      <h2 class="text-2xl">Search Movie</h2>
       ${searchResult?.map((movie) => `${movie.title}`).join("\n")}
 
       <!-- Popluar -->

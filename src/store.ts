@@ -1,12 +1,13 @@
-import { getWatchlist } from "../services/movieApi";
-import { TMDB } from "../services/tmdbApi";
-import type { DatabaseMovie, TMDBMovie, MovieStatus } from "../types/movie";
+import { getWatchlist } from "./app/watchlist/api";
+import { TMDB } from "./app/catalog/api";
+
+import type { CatalogItem } from "./app/catalog/types";
+import type { WatchlistItem } from "./app/watchlist/types";
 
 export interface AppState {
-  popularMovies: TMDBMovie[];
-  searchResult: TMDBMovie[] | null;
-  watchlist: DatabaseMovie[];
-  watchedMovies: DatabaseMovie[];
+  popularMovies: CatalogItem[];
+  searchResult: CatalogItem[] | null;
+  watchlist: WatchlistItem[];
 }
 
 class Store {
@@ -19,7 +20,6 @@ class Store {
       popularMovies: [],
       searchResult: null,
       watchlist: [],
-      watchedMovies: [],
     };
   }
 
@@ -27,6 +27,7 @@ class Store {
     return { ...this.state };
   }
 
+  // Loading external data into the store
   async loadPopularMovies(shouldTriggerRender: boolean = true) {
     if (this.state.popularMovies.length) return;
 
@@ -46,17 +47,12 @@ class Store {
     this.triggerRender();
   }
 
-  async loadWatchlist(status: MovieStatus) {
+  async loadWatchlist() {
     if (this.state.watchlist.length) return;
 
     const data = await getWatchlist();
 
-    if (status === "watchlist") {
-      this.state.watchlist = data;
-    } else {
-      this.state.watchedMovies = data;
-    }
-
+    this.state.watchlist = data;
     this.triggerRender();
   }
 

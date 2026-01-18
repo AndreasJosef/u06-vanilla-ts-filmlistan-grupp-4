@@ -1,6 +1,6 @@
-import "./style.css";
-import { type AppState, setRenderCallback, getState } from "./lib/store.ts";
-import type { ViewCleanup, ViewComponent } from "./types/view.ts";
+import "./global.css";
+import { type AppState, setRenderCallback, getState } from "./store";
+import type { ViewCleanup, ViewComponent } from "./views/view.ts";
 
 // Statiska sidor
 // måste refererera till den specifika .html filen med "?raw" för att kunna läsas in

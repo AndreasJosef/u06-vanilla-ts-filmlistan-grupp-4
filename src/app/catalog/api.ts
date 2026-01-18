@@ -1,4 +1,5 @@
-import { type TMDBMovie } from "../types/movie";
+import { type CatalogItem } from "./types";
+import { safeFetchList, safeFetchOne } from "../../core/api-engine";
 
 // Config
 const TMBD_ENDPOINTS = {
@@ -18,13 +19,16 @@ const options = {
 };
 
 // Functions to query endpoints
+// TODO: Refactor to use safeFetchList()
 const getPopularMovies = async () =>
-  await requestTMDB<TMDBMovie[]>(TMBD_ENDPOINTS.base);
+  await requestTMDB<CatalogItem[]>(TMBD_ENDPOINTS.base);
 
+// TODO: Refactor to use safeFetchOne()
 const searchMovie = async (searchText: string) => {
-  return await requestTMDB<TMDBMovie[]>(TMBD_ENDPOINTS.search + searchText);
+  return await requestTMDB<CatalogItem[]>(TMBD_ENDPOINTS.search + searchText);
 };
 
+// TODO: Remove once safeFetch is implemented and connected
 // Typed request Wrapper
 export async function requestTMDB<TResponse>(
   url: string,
