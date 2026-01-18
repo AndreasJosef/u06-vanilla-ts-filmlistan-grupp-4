@@ -4,6 +4,7 @@ type CatalogItemBase = {
   description: string;
   rating_avg: number;
   release_date: string;
+  posterUrl: string;
 };
 
 export type CatalogItemDetail = CatalogItemBase & {

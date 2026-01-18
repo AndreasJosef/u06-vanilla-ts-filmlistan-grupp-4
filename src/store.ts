@@ -8,6 +8,7 @@ export interface AppState {
   popularMovies: CatalogItem[];
   searchResult: CatalogItem[] | null;
   watchlist: WatchlistItem[];
+  error: string | null;
 }
 
 class Store {
@@ -20,6 +21,7 @@ class Store {
       popularMovies: [],
       searchResult: null,
       watchlist: [],
+      error: null,
     };
   }
 
@@ -28,22 +30,31 @@ class Store {
   }
 
   // Loading external data into the store
-  async loadPopularMovies(shouldTriggerRender: boolean = true) {
+  async loadPopularMovies() {
     if (this.state.popularMovies.length) return;
 
-    try {
-      this.state.popularMovies = await TMDB.getPopularMovies();
+    const moviesResult = await TMDB.getPopularMovies();
 
-      if (shouldTriggerRender) {
-        this.triggerRender();
-      }
-    } catch (error) {
-      console.error("Failed to load popular movies:", error);
+    if (moviesResult.ok) {
+      this.state.popularMovies = moviesResult.value;
+      this.state.error = null;
+    } else {
+      console.log("Error loading movies", moviesResult.error);
+      this.state.popularMovies = [];
+      this.state.error = moviesResult.error;
     }
+
+    this.triggerRender();
   }
 
   async searchMovies(searchText: string) {
-    this.state.searchResult = await TMDB.searchMovie(searchText);
+    const response = await TMDB.searchMovie(searchText);
+
+    if (response.ok) {
+      this.state.searchResult = response.value;
+    } else {
+      this.state.error = response.error;
+    }
     this.triggerRender();
   }
 

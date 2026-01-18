@@ -7,13 +7,13 @@ import { type Result, ok, fail } from "./result";
  * @param parser - A function that converts 'unknown' garbage into 'Result<T>'
  */
 
-// TODO: Add a config object to this function can receive credentials
 export async function safeFetchList<T>(
   url: string,
   parser: (input: unknown) => Result<T>,
+  options: RequestInit,
 ): Promise<Result<T[]>> {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       return fail(`HTTP Error: ${response.status} ${response.statusText}`);
@@ -84,9 +84,10 @@ export async function safeFetchList<T>(
 export async function safeFetchOne<T>(
   url: string,
   parser: (input: unknown) => Result<T>,
+  config: RequestInit,
 ): Promise<Result<T>> {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, config);
     if (!response.ok) return fail(`HTTP ${response.status}`);
 
     const rawData: unknown = await response.json();

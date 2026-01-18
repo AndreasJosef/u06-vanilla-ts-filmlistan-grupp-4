@@ -10,7 +10,7 @@ import { createInput } from "../../app/catalog/components/search";
 
 export default function home(state: AppState): ViewElement {
   const home = document.createElement("div");
-  const { popularMovies, searchResult } = state;
+  const { popularMovies, searchResult, error } = state;
 
   const searchInput = createInput({
     type: "text",
@@ -26,13 +26,29 @@ export default function home(state: AppState): ViewElement {
 
   home.innerHTML = `
     <section>
+      <h2>Error: ${error}</h2>
       <!-- Search -->
       <h2 class="text-2xl">Search Movie</h2>
       ${searchResult?.map((movie) => `${movie.title}`).join("\n")}
 
       <!-- Popluar -->
-      <ul>
-          ${popularMovies.map((movie) => `<li><h2>${movie.title}</h2></li>`).join("")} 
+      <ul class="max-w-full grid grid-cols-3 gap-4">
+        ${popularMovies
+          .map(
+            (movie) => `
+        <a href="">
+          <li class="rounded-sm">
+          <h2>${movie.title}</h2>
+          <img 
+              class="rounded"
+            src="${movie.posterUrl}"
+            alt="${movie.title}" />
+
+          </li>
+        </a>
+        `,
+          )
+          .join("")} 
       </ul>
     </section>
   `;

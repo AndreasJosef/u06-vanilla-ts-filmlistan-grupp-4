@@ -17,9 +17,13 @@ export function createInput({
   // Template
   inputContainer.innerHTML = `
     <legend>${label}</legend>
-    <input type="${type}" name="${name}" id="${name}">
+    <input 
+      type="${type}" 
+      name="${name}" 
+      id="${name}" 
+      class="w-full bg-zinc-600 rounded py-1 px-2"
+      placeholder="Search Movie">
   `;
 
   return inputContainer;
 }
-

@@ -14,13 +14,12 @@ export function parseTmdbMovie(input: unknown): Result<CatalogItem> {
 
   const data = input as Record<string, any>;
 
-  // 1. Check strict invariants (Essential data)
+  // Check strict invariants (Essential data)
   if (!data.id || !data.title) {
     return fail("Invalid TMDB data: Missing ID or Title");
   }
 
-  // 2. Map external keys to your internal Types
-  // Note: We provide fallbacks (|| '') so the UI never crashes on missing optional data
+  // Map external keys to internal Types
   return ok({
     tmdb_id: String(data.id), // Convert TMDB number to your string type
     title: data.title,
@@ -28,9 +27,10 @@ export function parseTmdbMovie(input: unknown): Result<CatalogItem> {
     rating_avg: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
     release_date: data.release_date || "Unknown",
 
-    // Note: Your type definition didn't include 'poster_path' or 'posterUrl'.
-    // If you add it later, map it here:
-    // posterUrl: data.poster_path ? `https://image.tmdb.org/t/p/w500${data.poster_path}` : null
+    // how to create an image urls: https://developer.themoviedb.org/docs/image-basics
+    posterUrl: data.poster_path
+      ? `https:image.tmdb.org/t/p/w500${data.poster_path}`
+      : "https://placehold.co/600x400",
   });
 }
 
