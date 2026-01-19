@@ -1,5 +1,6 @@
 import "./global.css";
-import { type AppState, setRenderCallback, getState } from "./store";
+import { type AppState } from "./types.ts";
+import { setRenderCallback, getState } from "./store";
 import type { ViewCleanup, ViewComponent } from "./views/view.ts";
 
 // Statiska sidor
