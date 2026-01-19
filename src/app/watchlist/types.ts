@@ -1,28 +1,26 @@
-export type MovieStatus = "watchlist" | "watched";
-
-type WatchlistItemBase = {
-  id: number;
-  tmdb_id: number;
+export type WatchlistItemBase = {
+  id: string;
+  tmdb_id: string;
+  user_id: string;
   title: string;
-  posterUrl: string;
-  date_added: string;
+  poster_path: string;
   release_date: string;
-  rating_avg: number;
+  vote_average: number;
+  overview: string;
+  date_added: string;
+};
 
-  is_favorite?: boolean;
-  overview?: string | null;
+export type WatchlistItemNotSeen = WatchlistItemBase & {
+  status: "watchlist";
 };
 
 export type WatchlistItemSeen = WatchlistItemBase & {
   status: "watched";
-  personal_rating: number;
-  date_watched: string | null;
-  review?: string;
-};
 
-export type WatchlistItemNotSeen = WatchlistItemBase & {
-  status: "unwatched";
-  addWatchlist: boolean;
+  personal_rating: number;
+  date_watched: string;
+  is_favorite: boolean;
+  review: string;
 };
 
 export type WatchlistItem = WatchlistItemSeen | WatchlistItemNotSeen;

@@ -1,19 +1,20 @@
-// src/services/movieApi.ts
-import { type MovieFromDB } from "./types";
+import { type WatchlistItem } from "./types";
+
+import { safeFetchList } from "../../core/api-engine";
+import { parseWatchlistItem } from "./parser";
 
 const API_BASE_URL = "http://localhost:3000/api";
 
-export async function getWatchlist(): Promise<MovieFromDB[]> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/movies?status=watchlist`);
+const config: RequestInit = {
+  headers: {
+    "x-user-id": "team-1",
+  },
+};
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch watchlist");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching watchlist:", error);
-    throw error; // låt anropande kod hantera felet (t.ex. visa felmeddelande i UI:t)
-  }
+export async function getWatchlist() {
+  return await safeFetchList<WatchlistItem>(
+    `${API_BASE_URL}/movies?status=watchlist`,
+    parseWatchlistItem,
+    config,
+  );
 }

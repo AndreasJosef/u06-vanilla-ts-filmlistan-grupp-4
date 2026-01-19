@@ -8,7 +8,7 @@ import headerHTML from "./views/static/header/index.html?raw";
 import footerHTML from "./views/static/footer/index.html?raw";
 
 // Dynamiska sidor
-import homeView from "./views/home/index.ts";
+import { browseView } from "./views/browse/index.ts";
 import watchlistView from "./views/watchlist/index.ts";
 
 // Track current view cleanup function
@@ -18,7 +18,7 @@ const currentPage = (state: AppState): ReturnType<ViewComponent> => {
   const path = window.location.pathname;
   switch (path) {
     case "/":
-      return homeView(state);
+      return browseView(state);
     case "/watchlist":
       return watchlistView(state);
     default:

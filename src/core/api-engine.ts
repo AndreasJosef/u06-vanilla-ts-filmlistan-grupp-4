@@ -4,16 +4,31 @@ import { type Result, ok, fail } from "./result";
  * A reusable fetcher that handles the network, JSON parsing,
  * and data cleaning for a LIST of items.
  * * @param url - The endpoint to hit
- * @param parser - A function that converts 'unknown' garbage into 'Result<T>'
+ * @param parser - A function that converts 'unknown' input into 'Result<T>'
  */
 
 export async function safeFetchList<T>(
   url: string,
   parser: (input: unknown) => Result<T>,
-  options: RequestInit,
+  config: RequestInit = {},
 ): Promise<Result<T[]>> {
   try {
-    const response = await fetch(url, options);
+    // Prepare the headers
+    const headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
+    // merge user headers
+    if (config.headers) {
+      const userHeaders = new Headers(config.headers);
+      userHeaders.forEach((value, key) => headers.set(key, value));
+    }
+
+    // then spread the whole config and add the fixed headers.
+    const response = await fetch(url, {
+      ...config,
+      headers,
+    });
 
     if (!response.ok) {
       return fail(`HTTP Error: ${response.status} ${response.statusText}`);

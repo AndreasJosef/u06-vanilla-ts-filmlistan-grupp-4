@@ -24,11 +24,11 @@ export function parseTmdbMovie(input: unknown): Result<CatalogItem> {
     tmdb_id: String(data.id), // Convert TMDB number to your string type
     title: data.title,
     description: data.overview || "", // Map 'overview' -> 'description'
-    rating_avg: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
+    vote_average: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
     release_date: data.release_date || "Unknown",
 
     // how to create an image urls: https://developer.themoviedb.org/docs/image-basics
-    posterUrl: data.poster_path
+    poster_path: data.poster_path
       ? `https:image.tmdb.org/t/p/w500${data.poster_path}`
       : "https://placehold.co/600x400",
   });

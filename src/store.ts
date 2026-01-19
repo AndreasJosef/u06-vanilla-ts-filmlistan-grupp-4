@@ -6,7 +6,7 @@ import type { WatchlistItem } from "./app/watchlist/types";
 
 export interface AppState {
   popularMovies: CatalogItem[];
-  searchResult: CatalogItem[] | null;
+  searchResult: CatalogItem[];
   watchlist: WatchlistItem[];
   error: string | null;
 }
@@ -19,7 +19,7 @@ class Store {
     this.renderCallback = () => {};
     this.state = {
       popularMovies: [],
-      searchResult: null,
+      searchResult: [],
       watchlist: [],
       error: null,
     };
@@ -61,9 +61,15 @@ class Store {
   async loadWatchlist() {
     if (this.state.watchlist.length) return;
 
-    const data = await getWatchlist();
+    const response = await getWatchlist();
 
-    this.state.watchlist = data;
+    if (response.ok) {
+      this.state.watchlist = response.value;
+    } else {
+      this.state.error = response.error;
+      console.log("Error loading Watchlist");
+    }
+
     this.triggerRender();
   }
 

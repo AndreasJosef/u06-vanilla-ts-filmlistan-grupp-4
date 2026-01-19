@@ -16,7 +16,7 @@ export function createInput({
 
   // Template
   inputContainer.innerHTML = `
-    <legend>${label}</legend>
+    <legend class="hidden">${label}</legend>
     <input 
       type="${type}" 
       name="${name}" 

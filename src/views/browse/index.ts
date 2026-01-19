@@ -8,7 +8,7 @@ import {
 import type { ViewElement } from "../view";
 import { createInput } from "../../app/catalog/components/search";
 
-export default function home(state: AppState): ViewElement {
+export function browseView(state: AppState): ViewElement {
   const home = document.createElement("div");
   const { popularMovies, searchResult, error } = state;
 
@@ -28,8 +28,8 @@ export default function home(state: AppState): ViewElement {
     <section>
       <h2>Error: ${error}</h2>
       <!-- Search -->
-      <h2 class="text-2xl">Search Movie</h2>
-      ${searchResult?.map((movie) => `${movie.title}`).join("\n")}
+      <h2 class="text-2xl">Popular</h2>
+      ${searchResult.map((movie) => `${movie.title}`).join("\n")}
 
       <!-- Popluar -->
       <ul class="max-w-full grid grid-cols-3 gap-4">
@@ -38,10 +38,9 @@ export default function home(state: AppState): ViewElement {
             (movie) => `
         <a href="">
           <li class="rounded-sm">
-          <h2>${movie.title}</h2>
           <img 
               class="rounded"
-            src="${movie.posterUrl}"
+            src="${movie.poster_path}"
             alt="${movie.title}" />
 
           </li>

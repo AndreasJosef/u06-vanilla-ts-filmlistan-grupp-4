@@ -2,9 +2,9 @@ type CatalogItemBase = {
   tmdb_id: string;
   title: string;
   description: string;
-  rating_avg: number;
+  vote_average: number;
   release_date: string;
-  posterUrl: string;
+  poster_path: string;
 };
 
 export type CatalogItemDetail = CatalogItemBase & {
