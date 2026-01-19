@@ -30,7 +30,7 @@ export function parseTmdbMovie(input: unknown): Result<CatalogItem> {
     // how to create an image urls: https://developer.themoviedb.org/docs/image-basics
     poster_path: data.poster_path
       ? `https:image.tmdb.org/t/p/w500${data.poster_path}`
-      : "https://placehold.co/600x400",
+      : "https://placehold.co/400x600?text=No+Image",
   });
 }
 

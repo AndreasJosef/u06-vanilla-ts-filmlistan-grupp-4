@@ -11,6 +11,10 @@ export interface AppState {
   error: string | null;
 }
 
+// TODO: Refactor Store be a generic state store
+// It currently knows to much and imports a bunch of functions that work on the state.
+// Instead the the calss should simply make getter and setter available and then rerender on every
+// state change. Features can then call these directly via actions.
 class Store {
   renderCallback: () => void;
   state: AppState;
