@@ -1,5 +1,7 @@
 import type { ViewElement } from "../view";
-import { loadWatchlist, type AppState } from "../../store";
+import type { AppState } from "../../types";
+
+import { loadWatchlist } from "../../app/watchlist/actions";
 
 export default function watchlist(state: AppState): ViewElement {
   const watchlistEl = document.createElement("div");

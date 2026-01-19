@@ -1,12 +1,10 @@
-import {
-  type AppState,
-  getState,
-  searchMovies,
-  loadPopularMovies,
-} from "../../store";
-
+import type { AppState } from "../../types";
 import type { ViewElement } from "../view";
 
+import { getState } from "../../store";
+import { loadPopularMovies, searchMovies } from "../../app/catalog/actions";
+
+// Components
 import { createInput } from "../../app/catalog/components/search";
 import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
 
@@ -36,8 +34,9 @@ export function browseView(state: AppState): ViewElement {
   browseViewEl.innerHTML = `
     <section>
       <div class="search-bar"></div>
+      <p>${error ? error : ""}</p>
       <h2 class="text-2xl">${sectionTitle}</h2>
-      <!-- Popluar -->
+      <!-- Gallery -->
       <ul class="max-w-full grid grid-cols-3 auto-rows-auto gap-4"></ul>
     </section>
   `;
