@@ -1,6 +1,7 @@
 import { type AppState } from "./types";
 
 const initialState: AppState = {
+  currentView: "catalog",
   popularMovies: [],
   searchResult: [],
   watchlist: [],

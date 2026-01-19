@@ -18,3 +18,8 @@ export async function getWatchlist() {
     config,
   );
 }
+
+// TODO: Implent function that saves movie to DB
+export async function saveWatchlistItem(item: WatchlistItem) {
+  console.log("Add to Watchlist: ", item.title);
+}

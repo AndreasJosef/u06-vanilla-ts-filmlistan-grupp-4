@@ -29,6 +29,7 @@ const currentPage = (state: AppState): ReturnType<ViewComponent> => {
 
 const app = document.querySelector("#app")!;
 
+// TODO: Move the whole content here into creatRootView
 // Funktionen som renderar sidan
 const renderApp = () => {
   // Cleanup previous view before rendering new one

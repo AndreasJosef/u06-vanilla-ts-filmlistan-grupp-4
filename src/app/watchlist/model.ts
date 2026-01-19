@@ -1,6 +1,7 @@
 import type { CatalogItem } from "../catalog/types";
 import type { WatchlistItemNotSeen } from "./types";
 
+// TODO: Connect this function an action to subscribe button via an action addToWatchlist(id: number);
 // Turn a Search Result into a Watchlist Item"
 export function createDraftFromCatalog(
   item: CatalogItem,

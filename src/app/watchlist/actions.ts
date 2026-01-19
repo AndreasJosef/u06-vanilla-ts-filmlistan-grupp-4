@@ -19,3 +19,8 @@ export async function loadWatchlist() {
     });
   }
 }
+
+export async function addToWatchlist(id: number) {
+  console.log("Add to wachlist TMDB ID: ", id);
+  // TODO: Implement function that adds create watchlist item with the help off createDraft model function and also persists to db via api
+}
