@@ -1,4 +1,5 @@
 // Komponent för sökning
+// NOTE: Should capture Search term in state as well so that I can be displayed in browse result view
 export function createInput({
   type,
   name,
@@ -21,7 +22,7 @@ export function createInput({
       type="${type}" 
       name="${name}" 
       id="${name}" 
-      class="w-full bg-zinc-600 rounded py-1 px-2"
+      class="w-full bg-zinc-600 rounded py-1 px-2 my-6"
       placeholder="Search Movie">
   `;
 

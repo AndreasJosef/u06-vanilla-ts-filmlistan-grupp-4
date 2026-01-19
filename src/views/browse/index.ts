@@ -6,68 +6,82 @@ import {
 } from "../../store";
 
 import type { ViewElement } from "../view";
+
 import { createInput } from "../../app/catalog/components/search";
+import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
 
 export function browseView(state: AppState): ViewElement {
-  const home = document.createElement("div");
   const { popularMovies, searchResult, error } = state;
+  const browseViewEl = document.createElement("div");
 
+  // Determine if we are in search mode and populate list accordingly
+  const searchMode = searchResult.length > 0;
+  const movieList = searchMode ? searchResult : popularMovies;
+  const sectionTitle = searchMode ? "Search Results" : "Popular Movies";
+
+  if (!getState().popularMovies.length && !searchMode) {
+    loadPopularMovies();
+  }
+
+  // Creating DOM Elements
   const searchInput = createInput({
     type: "text",
     name: "search",
     label: "search",
   });
 
-  if (!getState().popularMovies.length) {
-    loadPopularMovies();
-  }
+  const galleryCards = movieList.map(createGalleryCard);
 
-  home.classList.add("popular");
-
-  home.innerHTML = `
+  // View DOM Template
+  browseViewEl.innerHTML = `
     <section>
-      <h2>Error: ${error}</h2>
-      <!-- Search -->
-      <h2 class="text-2xl">Popular</h2>
-      ${searchResult.map((movie) => `${movie.title}`).join("\n")}
-
+      <div class="search-bar"></div>
+      <h2 class="text-2xl">${sectionTitle}</h2>
       <!-- Popluar -->
-      <ul class="max-w-full grid grid-cols-3 gap-4">
-        ${popularMovies
-          .map(
-            (movie) => `
-        <a href="">
-          <li class="rounded-sm">
-          <img 
-              class="rounded"
-            src="${movie.poster_path}"
-            alt="${movie.title}" />
-
-          </li>
-        </a>
-        `,
-          )
-          .join("")} 
-      </ul>
+      <ul class="max-w-full grid grid-cols-3 auto-rows-auto gap-4"></ul>
     </section>
   `;
 
-  home.prepend(searchInput);
+  // Appending Components
+  const galleryEl = browseViewEl.querySelector("ul") as HTMLUListElement;
+  const searchContainer = browseViewEl.querySelector(
+    ".search-bar",
+  ) as HTMLDivElement;
 
+  galleryCards.forEach((item) => galleryEl.appendChild(item));
+  searchContainer.appendChild(searchInput);
+
+  // Event Handlers
   const inputEl = searchInput.querySelector("input") as HTMLInputElement;
 
+  // Enter on search box
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter" && inputEl.value !== "") {
       searchMovies(inputEl.value.trim());
     }
   };
 
-  inputEl.addEventListener("keypress", handleKeyPress);
+  // handle click on list items
+  const handleGallerClick = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
 
-  // Attach cleanup function to properly remove event listener
-  (home as ViewElement).cleanup = () => {
-    inputEl.removeEventListener("keypress", handleKeyPress);
+    if (target.tagName === "IMG") {
+      const card = target.closest("[data-tmdb-id]") as HTMLElement;
+
+      if (card) {
+        console.log(card.dataset.tmdbId);
+      }
+    }
   };
 
-  return home;
+  inputEl.addEventListener("keypress", handleKeyPress);
+  galleryEl.addEventListener("click", handleGallerClick);
+
+  // Attach cleanup function to properly remove event listener
+  (browseViewEl as ViewElement).cleanup = () => {
+    inputEl.removeEventListener("keypress", handleKeyPress);
+    galleryEl.removeEventListener("click", handleGallerClick);
+  };
+
+  return browseViewEl;
 }
