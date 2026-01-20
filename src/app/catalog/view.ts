@@ -1,5 +1,6 @@
 import type { AppState, ViewElement } from "../../types";
 
+import { getCurrentCatalog } from "./model";
 import { searchMovies } from "../../app/catalog/actions";
 import { addToWatchlist } from "../watchlist/actions";
 
@@ -7,14 +8,10 @@ import { addToWatchlist } from "../watchlist/actions";
 import { createInput } from "../../app/catalog/components/search";
 import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
 
-export function browseView(state: AppState): ViewElement {
-  const { popularMovies, searchResult, error } = state;
-  const browseViewEl = document.createElement("div");
+export function browseView(state: AppState) {
+  const { view_mode, movies } = getCurrentCatalog(state);
 
-  // Determine if we are in search mode and populate list accordingly
-  const searchMode = searchResult.length > 0;
-  const movieList = searchMode ? searchResult : popularMovies;
-  const sectionTitle = searchMode ? "Search Results" : "Popular Movies";
+  const browseViewEl = document.createElement("div") as ViewElement;
 
   // Creating DOM Elements
   const searchInput = createInput({
@@ -23,7 +20,7 @@ export function browseView(state: AppState): ViewElement {
     label: "search",
   });
 
-  const galleryCards = movieList.map((movie) => {
+  const galleryCards = movies.map((movie) => {
     return createGalleryCard(movie, {
       onAdd: () => addToWatchlist(movie),
     });
@@ -33,8 +30,8 @@ export function browseView(state: AppState): ViewElement {
   browseViewEl.innerHTML = `
     <section>
       <div class="search-bar"></div>
-      <p>${error ? error : ""}</p>
-      <h2 class="text-2xl">${sectionTitle}</h2>
+      <p>${state.error ? state.error : ""}</p>
+      <h2 class="text-2xl">${view_mode}</h2>
       <!-- Gallery -->
       <ul class="max-w-full grid grid-cols-3 auto-rows-auto gap-4"></ul>
     </section>
@@ -76,7 +73,7 @@ export function browseView(state: AppState): ViewElement {
   galleryEl.addEventListener("click", handleGallerClick);
 
   // Attach cleanup function to properly remove event listener
-  (browseViewEl as ViewElement).cleanup = () => {
+  browseViewEl.cleanup = () => {
     inputEl.removeEventListener("keypress", handleKeyPress);
     galleryEl.removeEventListener("click", handleGallerClick);
   };

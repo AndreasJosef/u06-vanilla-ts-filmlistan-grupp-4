@@ -1,10 +1,19 @@
 import { setState, getState } from "../../store";
+import { loadWatchlist } from "../watchlist/actions";
 import { TMDB } from "./api";
 
 export async function showCatalog() {
   setState({ currentView: "catalog" });
 
-  await loadPopularMovies();
+  // Determine if watchlist should be loaded as well and if so load it in paraell.
+  // This needed so that I can compare against it for showing inWatchlist status in the catalog view
+  // First check if we need to load the watchlist
+  const shouldLoadWatchlist = getState().watchlist.length === 0;
+
+  await Promise.all([
+    loadPopularMovies(),
+    shouldLoadWatchlist ? loadWatchlist() : Promise.resolve(null),
+  ]);
 }
 
 // Action that loads popular movies from TMDB

@@ -1,3 +1,4 @@
+// Domain Model
 type CatalogItemBase = {
   tmdb_id: string;
   title: string;
@@ -14,3 +15,13 @@ export type CatalogItemDetail = CatalogItemBase & {
 };
 
 export type CatalogItem = CatalogItemBase | CatalogItemDetail;
+
+// View Models
+export type CatalogItemViewModel = CatalogItem & {
+  inWatchlist: boolean;
+};
+
+export interface CatalogViewModel {
+  view_mode: string;
+  movies: CatalogItemViewModel[];
+}
