@@ -8,6 +8,7 @@ import { addToWatchlist } from "../watchlist/actions";
 import { createInput } from "../../app/catalog/components/search";
 import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
 
+// TODO: Add a 'Clear' button for search results
 export function browseView(state: AppState) {
   const { view_mode, movies } = getCurrentCatalog(state);
 

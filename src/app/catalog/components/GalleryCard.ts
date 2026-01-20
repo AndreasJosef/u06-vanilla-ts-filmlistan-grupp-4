@@ -2,6 +2,7 @@ import { type CatalogItemViewModel } from "../types";
 
 interface CardActions {
   onAdd: () => void;
+  // TODO: add another action -> onOpen which navigates to url /movie/{tmdb_id} of clicked movie
 }
 
 export function createGalleryCard(
