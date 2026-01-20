@@ -96,6 +96,7 @@ export async function safeFetchList<T>(
 /**
  * A reusable fetcher for a SINGLE item.
  */
+
 export async function safeFetchOne<T>(
   url: string,
   parser: (input: unknown) => Result<T>,

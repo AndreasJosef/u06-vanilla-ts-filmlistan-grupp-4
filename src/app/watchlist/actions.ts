@@ -41,6 +41,8 @@ export async function addToWatchlist(item: CatalogItem) {
   const currentList = getState().watchlist;
   const newItem = createDraftFromCatalog(item);
 
+  // optimistic ui
+  // update UI immediatley and reverse on error
   setState({
     watchlist: [newItem, ...currentList],
   });
@@ -50,18 +52,10 @@ export async function addToWatchlist(item: CatalogItem) {
   if (!response.ok) {
     setState({
       error: response.error,
+      watchlist: currentList,
     });
 
-    const watchlistFromState = getState().watchlist;
-    const rollback = watchlistFromState.filter(
-      (i) => i.tmdb_id !== newItem.tmdb_id,
-    );
-
-    setState({
-      watchlist: rollback,
-    });
-
-    // TODO: Make a Error or Toast component and handle display time there then delte his hardcoded timer.
+    // TODO: Make an Error or Toast component and handle display time there then delte his hardcoded timer.
     setTimeout(() => setState({ error: null }), 1000);
   }
 }
