@@ -1,8 +1,6 @@
-import type { AppState } from "../../types";
-import type { ViewElement } from "../view";
+import type { AppState, ViewElement } from "../../types";
 
-import { getState } from "../../store";
-import { loadPopularMovies, searchMovies } from "../../app/catalog/actions";
+import { searchMovies } from "../../app/catalog/actions";
 
 // Components
 import { createInput } from "../../app/catalog/components/search";
@@ -16,10 +14,6 @@ export function browseView(state: AppState): ViewElement {
   const searchMode = searchResult.length > 0;
   const movieList = searchMode ? searchResult : popularMovies;
   const sectionTitle = searchMode ? "Search Results" : "Popular Movies";
-
-  if (!getState().popularMovies.length && !searchMode) {
-    loadPopularMovies();
-  }
 
   // Creating DOM Elements
   const searchInput = createInput({

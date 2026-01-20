@@ -1,13 +1,8 @@
-import type { ViewElement } from "../view";
-import type { AppState } from "../../types";
+import type { AppState, ViewElement } from "../../types";
 
-import { loadWatchlist } from "../../app/watchlist/actions";
-
-export default function watchlist(state: AppState): ViewElement {
-  const watchlistEl = document.createElement("div");
+export function watchlistView(state: AppState): ViewElement {
+  const watchlistEl = document.createElement("div") as ViewElement;
   const { watchlist } = state;
-
-  loadWatchlist();
 
   // TODO: Replace h1>movie.title with an a MovieCard component
   watchlistEl.innerHTML = `
@@ -18,7 +13,7 @@ export default function watchlist(state: AppState): ViewElement {
   `;
 
   // Attach cleanup function to properly remove event listener
-  (watchlistEl as ViewElement).cleanup = () => {
+  watchlistEl.cleanup = () => {
     // empty for now
   };
 

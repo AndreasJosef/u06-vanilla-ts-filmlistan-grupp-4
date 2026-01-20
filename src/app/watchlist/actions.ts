@@ -1,6 +1,16 @@
 import { getState, setState } from "../../store";
 import { getWatchlist } from "./api";
 
+export async function showWatchlist() {
+  setState({ currentView: "watchlist" });
+
+  const state = getState();
+
+  if (state.watchlist.length === 0) {
+    await loadWatchlist();
+  }
+}
+
 export async function loadWatchlist() {
   const state = getState();
 

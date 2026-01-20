@@ -1,68 +1,63 @@
 import "./global.css";
-import { type AppState } from "./types.ts";
+
+import type { ViewCleanup, ViewElement } from "./types.ts";
+
 import { setRenderCallback, getState } from "./store";
-import type { ViewCleanup, ViewComponent } from "./views/view.ts";
+import { createRootView } from "./view.ts";
 
-// Statiska sidor
-// måste refererera till den specifika .html filen med "?raw" för att kunna läsas in
-import headerHTML from "./views/static/header/index.html?raw";
-import footerHTML from "./views/static/footer/index.html?raw";
-
-// Dynamiska sidor
-import { browseView } from "./views/browse/index.ts";
-import watchlistView from "./views/watchlist/index.ts";
+import { showCatalog } from "./app/catalog/actions.ts";
+import { showWatchlist } from "./app/watchlist/actions.ts";
 
 // Track current view cleanup function
 let currentViewCleanup: ViewCleanup | null = null;
 
-const currentPage = (state: AppState): ReturnType<ViewComponent> => {
+// Get the app root element
+const app = document.querySelector("#app")!;
+
+// Mapping url -> to actions
+const handleRoute = () => {
   const path = window.location.pathname;
   switch (path) {
     case "/":
-      return browseView(state);
+      showCatalog();
+      break;
     case "/watchlist":
-      return watchlistView(state);
+      showWatchlist();
+      break;
     default:
-      return "404";
+      console.log("not found");
+      return;
   }
 };
 
-const app = document.querySelector("#app")!;
-
-// TODO: Move the whole content here into creatRootView
 // Funktionen som renderar sidan
 const renderApp = () => {
+  const state = getState();
+
   // Cleanup previous view before rendering new one
   if (currentViewCleanup) {
     currentViewCleanup();
     currentViewCleanup = null;
   }
 
-  const page = currentPage(getState());
+  app.innerHTML = "";
 
-  if (typeof page === "string") {
-    app.innerHTML = `
-          ${headerHTML} 
-          ${page} 
-          ${footerHTML}`;
-  } else {
-    app.innerHTML = `${headerHTML} ${footerHTML}`;
-    app.insertBefore(page, app.querySelector("footer")!);
+  const rootView: ViewElement = createRootView(state);
+  app.appendChild(rootView);
 
-    // Store cleanup function if available
-    if (page && typeof page === "object" && "cleanup" in page && page.cleanup) {
-      currentViewCleanup = page.cleanup;
-    }
+  // Store cleanup function if available
+  if (rootView.cleanup) {
+    currentViewCleanup = rootView.cleanup;
   }
 };
 
-// Initialisera appen
-renderApp();
+// Wiring up the app to state and url changes
+setRenderCallback(renderApp);
 
 // Rerender-logic
 // Om sidan ändras, rerenderas appen
 window.addEventListener("popstate", () => {
-  renderApp();
+  handleRoute();
 });
 
 // Intercepta länkar och hantera navigation
@@ -75,9 +70,9 @@ document.addEventListener("click", (e) => {
     e.preventDefault();
     const path = new URL(link.href).pathname;
     window.history.pushState({}, "", path);
-    renderApp();
+    handleRoute();
   }
 });
 
-// Set render callback
-setRenderCallback(renderApp);
+// boot
+handleRoute();

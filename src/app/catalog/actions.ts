@@ -1,6 +1,12 @@
 import { setState, getState } from "../../store";
 import { TMDB } from "./api";
 
+export async function showCatalog() {
+  setState({ currentView: "catalog" });
+
+  await loadPopularMovies();
+}
+
 // Action that loads popular movies from TMDB
 export async function loadPopularMovies() {
   const state = getState();
