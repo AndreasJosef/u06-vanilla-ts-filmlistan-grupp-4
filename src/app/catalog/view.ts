@@ -1,6 +1,7 @@
 import type { AppState, ViewElement } from "../../types";
 
 import { searchMovies } from "../../app/catalog/actions";
+import { addToWatchlist } from "../watchlist/actions";
 
 // Components
 import { createInput } from "../../app/catalog/components/search";
@@ -22,7 +23,11 @@ export function browseView(state: AppState): ViewElement {
     label: "search",
   });
 
-  const galleryCards = movieList.map(createGalleryCard);
+  const galleryCards = movieList.map((movie) => {
+    return createGalleryCard(movie, {
+      onAdd: () => addToWatchlist(movie),
+    });
+  });
 
   // View DOM Template
   browseViewEl.innerHTML = `

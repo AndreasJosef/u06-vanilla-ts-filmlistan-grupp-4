@@ -1,6 +1,11 @@
-import { getState, setState } from "../../store";
-import { getWatchlist } from "./api";
+import type { CatalogItem } from "../catalog/types";
 
+import { getState, setState } from "../../store";
+
+import { getWatchlist, saveWatchlistItem } from "./api";
+import { createDraftFromCatalog } from "./model";
+
+// Sets the current View to watchlist which will trigger a rerender
 export async function showWatchlist() {
   setState({ currentView: "watchlist" });
 
@@ -11,6 +16,7 @@ export async function showWatchlist() {
   }
 }
 
+// Loads users watchlist from the backend
 export async function loadWatchlist() {
   const state = getState();
 
@@ -30,7 +36,32 @@ export async function loadWatchlist() {
   }
 }
 
-export async function addToWatchlist(id: number) {
-  console.log("Add to wachlist TMDB ID: ", id);
-  // TODO: Implement function that adds create watchlist item with the help off createDraft model function and also persists to db via api
+// Adds a new movie to the users watchlist
+export async function addToWatchlist(item: CatalogItem) {
+  const currentList = getState().watchlist;
+  const newItem = createDraftFromCatalog(item);
+
+  setState({
+    watchlist: [newItem, ...currentList],
+  });
+
+  const response = await saveWatchlistItem(newItem);
+
+  if (!response.ok) {
+    setState({
+      error: response.error,
+    });
+
+    const watchlistFromState = getState().watchlist;
+    const rollback = watchlistFromState.filter(
+      (i) => i.tmdb_id !== newItem.tmdb_id,
+    );
+
+    setState({
+      watchlist: rollback,
+    });
+
+    // TODO: Make a Error or Toast component and handle display time there then delte his hardcoded timer.
+    setTimeout(() => setState({ error: null }), 1000);
+  }
 }

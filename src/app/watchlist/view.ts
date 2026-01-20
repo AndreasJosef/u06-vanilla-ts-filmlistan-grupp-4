@@ -12,10 +12,5 @@ export function watchlistView(state: AppState): ViewElement {
     </section>
   `;
 
-  // Attach cleanup function to properly remove event listener
-  watchlistEl.cleanup = () => {
-    // empty for now
-  };
-
   return watchlistEl;
 }

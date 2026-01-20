@@ -1,17 +1,29 @@
 import { type CatalogItem } from "../types";
 
-export function createGalleryCard(item: CatalogItem) {
+interface CardActions {
+  onAdd: () => void;
+}
+
+export function createGalleryCard(item: CatalogItem, actions: CardActions) {
   const el = document.createElement("div");
 
-  const template = `
+  el.innerHTML = `
           <li class="rounded-sm cursor-pointer" data-tmdb-id="${item.tmdb_id}">
             <img class="rounded" src="${item.poster_path}" alt="${item.title}">
-            <button class="bg-cyan-400 rounded px-3 py-1 cursor-pointer">Add</button>
           </li>`;
 
-  el.innerHTML = template;
+  // Create add button;
+  const button = document.createElement("button");
+  button.textContent = "Add";
+  button.className = "bg-cyan-400 rounded px-3 py-1 cursor-pointer";
 
-  console.log(el);
+  // run the the actions that were
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    actions.onAdd();
+  });
+
+  el.appendChild(button);
 
   return el;
 }

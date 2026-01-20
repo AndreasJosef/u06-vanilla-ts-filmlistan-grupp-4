@@ -119,13 +119,27 @@ export async function safeFetchOne<T>(
  */
 export async function safePost<T>(
   url: string,
-  payload: unknown,
+  payload: T,
+  config: RequestInit = {},
   parser?: (input: unknown) => Result<T>, // Optional: Parse the response
 ): Promise<Result<T | null>> {
   try {
+    config.method = "POST";
+
+    // Prepare the headers
+    const headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
+    // merge user headers
+    if (config.headers) {
+      const userHeaders = new Headers(config.headers);
+      userHeaders.forEach((value, key) => headers.set(key, value));
+    }
+
     const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      ...config,
+      headers,
       body: JSON.stringify(payload),
     });
 
