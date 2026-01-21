@@ -1,12 +1,13 @@
 import type { AppState, ViewElement } from "../../types";
 
 import { getCurrentCatalog } from "./model";
-import { searchMovies } from "../../app/catalog/actions";
+import { clearResult, searchMovies } from "../../app/catalog/actions";
 import { addToWatchlist } from "../watchlist/actions";
 
 // Components
 import { createInput } from "../../app/catalog/components/search";
 import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
+import { createButton } from "../../components/Button";
 
 // TODO: Add a 'Clear' button for search results
 export function browseView(state: AppState) {
@@ -14,7 +15,7 @@ export function browseView(state: AppState) {
 
   const browseViewEl = document.createElement("div") as ViewElement;
 
-  // Creating DOM Elements
+  // Creating Components
   const searchInput = createInput({
     type: "text",
     name: "search",
@@ -27,10 +28,20 @@ export function browseView(state: AppState) {
     });
   });
 
+  let clearButton: HTMLButtonElement | null = null;
+  if (view_mode === "Search Results") {
+    clearButton = createButton({
+      value: "Clear",
+      onClick: clearResult,
+    });
+  }
+
   // View DOM Template
   browseViewEl.innerHTML = `
     <section>
-      <div class="search-bar"></div>
+      <div class="search-controls flex items-center">
+        <div class="search-bar w-full"></div>
+      </div>
       <p>${state.error ? state.error : ""}</p>
       <h2 class="text-2xl">${view_mode}</h2>
       <!-- Gallery -->
@@ -40,12 +51,19 @@ export function browseView(state: AppState) {
 
   // Appending Components
   const galleryEl = browseViewEl.querySelector("ul") as HTMLUListElement;
+  const searchControls = browseViewEl.querySelector(
+    ".search-controls",
+  ) as HTMLDivElement;
   const searchContainer = browseViewEl.querySelector(
     ".search-bar",
   ) as HTMLDivElement;
 
   galleryCards.forEach((item) => galleryEl.appendChild(item));
   searchContainer.appendChild(searchInput);
+
+  if (clearButton) {
+    searchControls.appendChild(clearButton);
+  }
 
   // Event Handlers
   const inputEl = searchInput.querySelector("input") as HTMLInputElement;

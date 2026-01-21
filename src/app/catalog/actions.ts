@@ -52,3 +52,15 @@ export async function searchMovies(searchText: string) {
     });
   }
 }
+
+// Clear search results
+export function clearResult() {
+  const results = getState().searchResult;
+
+  if (results.length === 0) return;
+
+  setState({
+    searchResult: [],
+    error: null,
+  });
+}
