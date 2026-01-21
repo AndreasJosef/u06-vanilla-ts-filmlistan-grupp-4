@@ -1,30 +1,21 @@
 // Komponent för sökning
 // NOTE: Should capture Search term in state as well so that I can be displayed in browse result view
-export function createInput({
-  type,
-  name,
-  label,
-  classes = "",
-}: {
-  type: string;
+export interface InputProps {
   name: string;
-  label: string;
-  classes?: string;
-}) {
-  // Create
-  const inputContainer = document.createElement("fieldset");
-  inputContainer.className = classes;
+  type: string;
+  placeholder?: string;
+}
 
-  // Template
-  inputContainer.innerHTML = `
-    <legend class="hidden">${label}</legend>
-    <input 
-      type="${type}" 
-      name="${name}" 
-      id="${name}" 
-      class="w-full bg-zinc-600 rounded py-1 px-2 my-6"
-      placeholder="Search Movie">
-  `;
+export function createInput(props: InputProps) {
+  const { type, name } = props;
+  const placeholder = props.placeholder || "";
+
+  const inputContainer = document.createElement("input");
+  inputContainer.type = type;
+  inputContainer.name = name;
+  inputContainer.id = name;
+  inputContainer.className = "w-full bg-zinc-400 rounded py-1 px-2 my-6";
+  inputContainer.placeholder = placeholder;
 
   return inputContainer;
 }

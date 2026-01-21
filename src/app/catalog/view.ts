@@ -5,21 +5,21 @@ import { clearResult, searchMovies } from "../../app/catalog/actions";
 import { addToWatchlist } from "../watchlist/actions";
 
 // Components
-import { createInput } from "../../app/catalog/components/search";
+import { createSearchBar } from "./components/SearchBar";
 import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
-import { createButton } from "../../components/Button";
 
 // TODO: Add a 'Clear' button for search results
 export function browseView(state: AppState) {
   const { view_mode, movies } = getCurrentCatalog(state);
 
+  // Create the views DOM Element
   const browseViewEl = document.createElement("div") as ViewElement;
 
-  // Creating Components
-  const searchInput = createInput({
-    type: "text",
-    name: "search",
-    label: "search",
+  // Create the components
+  const searchBar = createSearchBar({
+    isSearchMode: view_mode === "Search Results",
+    onSearch: (query) => searchMovies(query),
+    onClear: clearResult,
   });
 
   const galleryCards = movies.map((movie) => {
@@ -28,20 +28,10 @@ export function browseView(state: AppState) {
     });
   });
 
-  let clearButton: HTMLButtonElement | null = null;
-  if (view_mode === "Search Results") {
-    clearButton = createButton({
-      value: "Clear",
-      onClick: clearResult,
-    });
-  }
-
-  // View DOM Template
+  // Template
   browseViewEl.innerHTML = `
     <section>
-      <div class="search-controls flex items-center">
-        <div class="search-bar w-full"></div>
-      </div>
+      <div class="search-container"></div>
       <p>${state.error ? state.error : ""}</p>
       <h2 class="text-2xl">${view_mode}</h2>
       <!-- Gallery -->
@@ -51,29 +41,12 @@ export function browseView(state: AppState) {
 
   // Appending Components
   const galleryEl = browseViewEl.querySelector("ul") as HTMLUListElement;
-  const searchControls = browseViewEl.querySelector(
-    ".search-controls",
-  ) as HTMLDivElement;
   const searchContainer = browseViewEl.querySelector(
-    ".search-bar",
-  ) as HTMLDivElement;
+    ".search-container",
+  ) as HTMLElement;
 
+  searchContainer.appendChild(searchBar);
   galleryCards.forEach((item) => galleryEl.appendChild(item));
-  searchContainer.appendChild(searchInput);
-
-  if (clearButton) {
-    searchControls.appendChild(clearButton);
-  }
-
-  // Event Handlers
-  const inputEl = searchInput.querySelector("input") as HTMLInputElement;
-
-  // Enter on search box
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === "Enter" && inputEl.value !== "") {
-      searchMovies(inputEl.value.trim());
-    }
-  };
 
   // handle click on list items
   const handleGallerClick = (e: MouseEvent) => {
@@ -88,12 +61,10 @@ export function browseView(state: AppState) {
     }
   };
 
-  inputEl.addEventListener("keypress", handleKeyPress);
   galleryEl.addEventListener("click", handleGallerClick);
 
   // Attach cleanup function to properly remove event listener
   browseViewEl.cleanup = () => {
-    inputEl.removeEventListener("keypress", handleKeyPress);
     galleryEl.removeEventListener("click", handleGallerClick);
   };
 

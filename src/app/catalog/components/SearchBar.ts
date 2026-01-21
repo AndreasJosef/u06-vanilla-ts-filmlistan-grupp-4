@@ -2,7 +2,7 @@
 import { createButton } from "../../../components/Button";
 import { createInput } from "./search";
 
-interface SearchBarProps {
+export interface SearchBarProps {
   isSearchMode: boolean;
   onSearch: (query: string) => void;
   onClear: () => void;
@@ -12,14 +12,14 @@ export function createSearchBar(props: SearchBarProps) {
   const searchBar = document.createElement("div");
   searchBar.className = "flex items-center gap-2 w-full";
 
-  // Creating the search input component
+  // Create the search input component
   const input = createInput({
     type: "text",
     name: "search",
     placeholder: "Search Movies..",
   });
 
-  // Wrapping the search action for easy registration on button
+  // Wrap the search action for easy reuse
   const triggerSearchAction = () => {
     const value = input.value.trim();
 
@@ -33,13 +33,13 @@ export function createSearchBar(props: SearchBarProps) {
   let actionButton: HTMLButtonElement;
   if (props.isSearchMode) {
     actionButton = createButton({
-      value: "Search",
-      onClick: triggerSearchAction,
+      value: "Clear",
+      onClick: props.onClear,
     });
   } else {
     actionButton = createButton({
-      value: "Clear",
-      onClick: props.onClear,
+      value: "Search",
+      onClick: triggerSearchAction,
     });
   }
 
@@ -47,6 +47,7 @@ export function createSearchBar(props: SearchBarProps) {
   searchBar.appendChild(input);
   searchBar.appendChild(actionButton);
 
+  // Attach listener for enter key
   searchBar.addEventListener("keypress", (e: KeyboardEvent) => {
     if (e.key === "Enter") triggerSearchAction();
   });
