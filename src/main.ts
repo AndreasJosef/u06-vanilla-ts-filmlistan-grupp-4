@@ -30,7 +30,7 @@ const handleRoute = () => {
   }
 };
 
-// Funktionen som renderar sidan
+// Funktionen som renderar sidan on every state change
 const renderApp = () => {
   const state = getState();
 
@@ -51,11 +51,11 @@ const renderApp = () => {
   }
 };
 
-// Wiring up the app to state and url changes
+// Subscribe renderApp to state changes
 setRenderCallback(renderApp);
 
 // Rerender-logic
-// Om sidan ändras, rerenderas appen
+// Subscribe store to route changes
 window.addEventListener("popstate", () => {
   handleRoute();
 });
