@@ -2,10 +2,10 @@ import { setState, getState } from "../../store";
 import { loadWatchlist } from "../watchlist/actions";
 import { TMDB } from "./api";
 
+// Make catalog the active view, load movies and watchlist
 export async function showCatalog() {
   setState({ currentView: "catalog" });
 
-  // First check if we need to load the watchlist
   const shouldLoadWatchlist = getState().watchlist.length === 0;
 
   // fetch TMDB and watchlist in parallel.
@@ -15,7 +15,7 @@ export async function showCatalog() {
   ]);
 }
 
-// Action that loads popular movies from TMDB
+// Fetch popular movies (only if not in store already) for TMDB and store in AppState
 export async function loadPopularMovies() {
   const state = getState();
 
@@ -37,7 +37,7 @@ export async function loadPopularMovies() {
   }
 }
 
-// Action that searches on TMDB and adds the result in store
+// Search TMDB and save to AppState
 export async function searchMovies(searchText: string) {
   const response = await TMDB.fetchMovies(searchText);
 
