@@ -7,7 +7,7 @@ import { type Result, ok, fail } from "./result";
  * @param parser - A function that converts 'unknown' input into 'Result<T>'
  */
 
-export async function safeFetchList<T>(
+export async function fetchSafeList<T>(
   url: string,
   parser: (input: unknown) => Result<T>,
   config: RequestInit = {},
@@ -97,7 +97,7 @@ export async function safeFetchList<T>(
  * A reusable fetcher for a SINGLE item.
  */
 
-export async function safeFetchOne<T>(
+export async function fetchSafeItem<T>(
   url: string,
   parser: (input: unknown) => Result<T>,
   config: RequestInit,

@@ -1,6 +1,6 @@
 import { type WatchlistItem } from "./types";
 
-import { safeFetchList, safePost } from "../../core/api-engine";
+import { fetchSafeList, safePost as postSafe } from "../../core/api-engine";
 import { parseWatchlistItem } from "./parser";
 
 const API_BASE_URL = "http://localhost:3000/api";
@@ -13,7 +13,7 @@ const config: RequestInit = {
 
 // Get all saved movies from backend
 export async function getWatchlist() {
-  return await safeFetchList<WatchlistItem>(
+  return await fetchSafeList<WatchlistItem>(
     `${API_BASE_URL}/movies`,
     parseWatchlistItem,
     config,
@@ -22,5 +22,5 @@ export async function getWatchlist() {
 
 // Save a new item to db
 export async function saveWatchlistItem(item: WatchlistItem) {
-  return await safePost<WatchlistItem>(`${API_BASE_URL}/movies`, item, config);
+  return await postSafe<WatchlistItem>(`${API_BASE_URL}/movies`, item, config);
 }

@@ -5,11 +5,10 @@ import { TMDB } from "./api";
 export async function showCatalog() {
   setState({ currentView: "catalog" });
 
-  // Determine if watchlist should be loaded as well and if so load it in paraell.
-  // This needed so that I can compare against it for showing inWatchlist status in the catalog view
   // First check if we need to load the watchlist
   const shouldLoadWatchlist = getState().watchlist.length === 0;
 
+  // fetch TMDB and watchlist in parallel.
   await Promise.all([
     loadPopularMovies(),
     shouldLoadWatchlist ? loadWatchlist() : Promise.resolve(null),
@@ -22,7 +21,7 @@ export async function loadPopularMovies() {
 
   if (state.popularMovies.length) return;
 
-  const result = await TMDB.getPopularMovies();
+  const result = await TMDB.fetchPopularMovies();
 
   if (result.ok) {
     setState({
@@ -38,9 +37,9 @@ export async function loadPopularMovies() {
   }
 }
 
-// Action to search for movie on TMDB
+// Action that searches on TMDB and adds the result in store
 export async function searchMovies(searchText: string) {
-  const response = await TMDB.searchMovie(searchText);
+  const response = await TMDB.fetchMovies(searchText);
 
   if (response.ok) {
     setState({
