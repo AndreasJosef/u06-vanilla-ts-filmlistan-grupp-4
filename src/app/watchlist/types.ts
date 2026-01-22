@@ -24,3 +24,11 @@ export type WatchlistItemSeen = WatchlistItemBase & {
 };
 
 export type WatchlistItem = WatchlistItemSeen | WatchlistItemNotSeen;
+
+export type WatchlistCardViewModel = {
+  id: string;
+  tmdb_id: string;
+  title: string;
+  posterUrl: string;
+  isSaved: boolean;
+}

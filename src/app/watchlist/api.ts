@@ -24,3 +24,16 @@ export async function getWatchlist() {
 export async function saveWatchlistItem(item: WatchlistItem) {
   return await postSafe<WatchlistItem>(`${API_BASE_URL}/movies`, item, config);
 }
+
+export async function deleteWatchlistItem(movieId: string) {
+  const response = await fetch(`${API_BASE_URL}/movies/${movieId}`, {
+    method: 'DELETE',
+    headers: config.headers,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete movie: ${response.status}`);
+  }
+
+  return response.json();
+}
