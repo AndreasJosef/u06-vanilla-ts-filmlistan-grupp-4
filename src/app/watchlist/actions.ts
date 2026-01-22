@@ -50,6 +50,19 @@ export async function addToWatchlist(item: CatalogItem) {
 
   const response = await saveWatchlistItem(newItem);
 
+  if (response.ok) {
+    const currentList = getState().watchlist;
+    const updatedList = currentList.map(movie =>
+      movie.tmdb_id === response.value?.tmdb_id
+        ? response.value
+        : movie
+    );
+    setState({
+      watchlist: updatedList
+    });
+
+  }
+
   if (!response.ok) {
     setState({
       watchlist: currentList,
@@ -67,6 +80,7 @@ export async function removeFromWatchlist(movieId: string) {
 
   const updatedList = currentList.filter(movie => movie.id !== movieId);
   setState({ watchlist: updatedList });
+  console.log("it works")
 
   try {
     await deleteWatchlistItem(movieId);
@@ -75,9 +89,8 @@ export async function removeFromWatchlist(movieId: string) {
       watchlist: currentList,
       error: error instanceof Error ? error.message : "Failed to remove movie"
     });
-    setTimeout(() => setState({ error: null }), 1000)
+
   }
-}
 
 // success feedback
 

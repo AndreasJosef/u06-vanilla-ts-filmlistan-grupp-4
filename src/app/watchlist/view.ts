@@ -21,7 +21,9 @@ export function watchlistView(state: AppState): ViewElement {
       title: movie.title,
       posterUrl: movie.posterUrl,
       isSaved: movie.isSaved,
+      showRemoveButton: true,
       onToggle: () => {
+        console.log('called delete with id', movie.id)
         removeFromWatchlist(movie.id);
       },
     });
