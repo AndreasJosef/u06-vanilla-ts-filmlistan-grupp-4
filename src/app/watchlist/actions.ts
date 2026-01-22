@@ -58,6 +58,8 @@ export async function addToWatchlist(item: CatalogItem) {
     toast.error("Could not add movie to watchlist");
     return;
   }
+
+  toast.success("Added to watchlist");
 }
 
 export async function removeFromWatchlist(movieId: string) {
@@ -78,7 +80,5 @@ export async function removeFromWatchlist(movieId: string) {
 }
 
 // success feedback
-toast.success("Added to watchlist");
-    
-  }
+
 
