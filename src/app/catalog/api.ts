@@ -1,11 +1,13 @@
 import { type CatalogItem } from "./types";
-import { fetchSafeList } from "../../core/api-engine";
-import { parseTmdbMovie } from "./parser";
+import { type MovieDetail } from "../detail/types";
+import { fetchSafeItem, fetchSafeList } from "../../core/api-engine";
+import { parseTMDBDetail, parseTmdbMovie } from "./parser";
 
 // Config
 const TMBD_ENDPOINTS = {
   base: "https://api.themoviedb.org/3/movie/popular",
   search: "https://api.themoviedb.org/3/search/movie?query=",
+  detail: "https://api.themoviedb.org/3/movie/",
 };
 
 // TODO: Move token into an .env file
@@ -32,8 +34,19 @@ const fetchMovies = async (searchText: string) =>
     config,
   );
 
+// Fetch Movie Details from TMDB
+const fetchMovieDetails = async (id: string) => {
+  console.log("Fetching Movie: ", id);
+  return await fetchSafeItem<MovieDetail>(
+    TMBD_ENDPOINTS.detail + id,
+    parseTMDBDetail,
+    config,
+  );
+};
+
 // Return all query functions on single Interface
 export const TMDB = {
   fetchPopularMovies,
   fetchMovies,
+  fetchMovieDetails,
 };

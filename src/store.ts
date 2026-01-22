@@ -6,7 +6,8 @@ const initialState: AppState = {
   searchResult: [],
   watchlist: [],
   error: null,
-  currentDetail: null,
+  focusedMovieId: null,
+  movieDetails: {},
 };
 
 class Store {
