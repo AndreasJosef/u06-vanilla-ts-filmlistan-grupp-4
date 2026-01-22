@@ -1,6 +1,8 @@
 import { getState, setState } from "../../store";
+import { toast } from "../../core/toast/toast";
 
-import { getWatchlist, saveWatchlistItem } from "./api";
+
+import { deleteWatchlistItem, getWatchlist, saveWatchlistItem } from "./api";
 import { createDraftFromCatalog } from "./model";
 import type { CatalogItem } from "../catalog/types";
 
@@ -48,13 +50,47 @@ export async function addToWatchlist(item: CatalogItem) {
 
   const response = await saveWatchlistItem(newItem);
 
+  if (response.ok) {
+    const currentList = getState().watchlist;
+    const updatedList = currentList.map(movie =>
+      movie.tmdb_id === response.value?.tmdb_id
+        ? response.value
+        : movie
+    );
+    setState({
+      watchlist: updatedList
+    });
+
+  }
+
   if (!response.ok) {
     setState({
-      error: response.error,
       watchlist: currentList,
     });
 
-    // TODO: Make an Error or Toast component and handle display time there then delte his hardcoded timer.
-    setTimeout(() => setState({ error: null }), 1000);
+    toast.error("Could not add movie to watchlist");
+    return;
+  }
+
+  toast.success("Added to watchlist");
+}
+
+export async function removeFromWatchlist(movieId: string) {
+  const currentList = getState().watchlist;
+
+  const updatedList = currentList.filter(movie => movie.id !== movieId);
+  setState({ watchlist: updatedList });
+  console.log("it works")
+
+  try {
+    await deleteWatchlistItem(movieId);
+  } catch (error) {
+    setState({
+      watchlist: currentList,
+      error: error instanceof Error ? error.message : "Failed to remove movie"
+    });
+
   }
 }
+// success feedback
+

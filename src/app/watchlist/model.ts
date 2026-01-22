@@ -1,5 +1,7 @@
+import type { AppState } from "../../types";
 import type { CatalogItem } from "../catalog/types";
-import type { WatchlistItemNotSeen } from "./types";
+import { removeFromWatchlist } from "./actions";
+import type { WatchlistCardViewModel, WatchlistItemNotSeen } from "./types";
 
 // Turn a Search Result into a Watchlist Item"
 export function createDraftFromCatalog(
@@ -23,4 +25,14 @@ export function createDraftFromCatalog(
     // New State -> Watched Status
     status: "watchlist",
   };
+}
+
+export function getWatchListViewModel(state: AppState): WatchlistCardViewModel[] {
+  return state.watchlist.map((movie) => ({
+    id: movie.id,
+    tmdb_id: movie.tmdb_id,
+    title: movie.title,
+    posterUrl: movie.poster_path,
+    isSaved: true,
+  }))
 }

@@ -155,3 +155,40 @@ export async function safePost<T>(
     return fail(e instanceof Error ? e.message : "Network Error");
   }
 }
+
+// Safe Delete
+export async function safeDelete<T>(
+  url: string,
+  config: RequestInit = {},
+  parser?: (input: unknown) => Result<T>, // Optional: Parse the response
+): Promise<Result<T | null>> {
+  try {
+    config.method = "DELETE";
+
+    // Prepare the headers
+    const headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
+    // merge user headers
+    if (config.headers) {
+      const userHeaders = new Headers(config.headers);
+      userHeaders.forEach((value, key) => headers.set(key, value));
+    }
+
+    const response = await fetch(url, {
+      ...config,
+      headers,
+    });
+
+    if (!response.ok) return fail(`HTTP ${response.status}`);
+
+    // If we don't care about the response data (fire and forget)
+    if (!parser) return ok(null);
+
+    const rawData: unknown = await response.json();
+    return parser(rawData);
+  } catch (e) {
+    return fail(e instanceof Error ? e.message : "Network Error");
+  }
+}
