@@ -1,9 +1,5 @@
 import type { AppState } from "../../types";
 import type { CatalogItem, CatalogViewModel } from "./types";
-
-// TODO: Move global compoents to shared/ folder for better naming.
-// import type { GalleryCardProps } from "../../components/GalleryCard";
-//
 export interface GalleryItemViewModel {
   id: string;
   title: string;
