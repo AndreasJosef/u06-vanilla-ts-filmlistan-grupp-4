@@ -1,15 +1,15 @@
 import type { AppState, ViewElement } from "../../types";
 
-import { getCurrentCatalog } from "./model";
+import { getCatalogViewModel } from "./model";
 import { clearResult, searchMovies } from "../../app/catalog/actions";
 import { addToWatchlist } from "../watchlist/actions";
 
 // Components
 import { createSearchBar } from "./components/SearchBar";
-import { createGalleryCard } from "../../app/catalog/components/GalleryCard";
+import { createGalleryCard } from "../../components/GalleryCard";
 
 export function browseView(state: AppState) {
-  const { view_mode, movies } = getCurrentCatalog(state);
+  const { view_mode, movies } = getCatalogViewModel(state);
 
   // Create the views DOM Element
   const browseViewEl = document.createElement("div") as ViewElement;
@@ -22,8 +22,16 @@ export function browseView(state: AppState) {
   });
 
   const galleryCards = movies.map((movie) => {
-    return createGalleryCard(movie, {
-      onAdd: () => addToWatchlist(movie),
+    return createGalleryCard({
+      ...movie,
+      onToggle: () => {
+        if (!movie.isSaved) {
+          addToWatchlist(movie.payload);
+        } else {
+          //  TODO: Write action that removes movie.id from watchlist.
+          console.log("remove from watchlist", movie.id);
+        }
+      },
     });
   });
 

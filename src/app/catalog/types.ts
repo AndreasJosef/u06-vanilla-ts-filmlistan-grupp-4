@@ -1,3 +1,5 @@
+import type { GalleryItemViewModel } from "./model";
+
 // Domain Model
 export type CatalogItem = {
   tmdb_id: string;
@@ -15,5 +17,5 @@ export type CatalogItemViewModel = CatalogItem & {
 
 export interface CatalogViewModel {
   view_mode: string;
-  movies: CatalogItemViewModel[];
+  movies: GalleryItemViewModel[];
 }

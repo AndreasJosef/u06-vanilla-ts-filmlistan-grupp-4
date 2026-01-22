@@ -1,9 +1,8 @@
-import type { CatalogItem } from "../catalog/types";
-
 import { getState, setState } from "../../store";
 
 import { getWatchlist, saveWatchlistItem } from "./api";
 import { createDraftFromCatalog } from "./model";
+import type { CatalogItem } from "../catalog/types";
 
 // Sets the current View to watchlist which will trigger a rerender
 export async function showWatchlist() {
