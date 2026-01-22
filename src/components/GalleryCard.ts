@@ -24,12 +24,12 @@ export function createGalleryCard(props: GalleryCardProps) {
   } else {
     button.textContent = "Saved";
     button.classList.add("bg-green-400");
-    button.disabled;
+    button.disabled = true;
   }
 
   // run the the actions that were
   button.addEventListener("click", (e) => {
-    e.stopPropagation();
+    e.preventDefault()
     props.onToggle();
   });
 
