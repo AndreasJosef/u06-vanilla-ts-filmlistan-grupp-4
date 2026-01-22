@@ -8,6 +8,7 @@ export interface AppState {
   searchResult: CatalogItem[];
   watchlist: WatchlistItem[];
   error: string | null;
+  currentDetail: string | null;
 }
 
 /**

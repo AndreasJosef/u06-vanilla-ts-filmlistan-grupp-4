@@ -2,6 +2,7 @@ import type { AppState, ViewElement } from "./types";
 
 import { browseView } from "./app/catalog/view";
 import { watchlistView } from "./app/watchlist/view";
+import { detailView } from "./app/detail/view";
 
 import headerHTML from "./components/static/header/index.html?raw";
 import footerHTML from "./components/static/footer/index.html?raw";
@@ -26,6 +27,9 @@ export function createRootView(state: AppState): ViewElement {
       break;
     case "watchlist":
       pageContent = watchlistView(state);
+      break;
+    case "detail":
+      pageContent = detailView(state);
       break;
     default:
       pageContent = document.createElement("div");

@@ -6,6 +6,7 @@ const initialState: AppState = {
   searchResult: [],
   watchlist: [],
   error: null,
+  currentDetail: null,
 };
 
 class Store {

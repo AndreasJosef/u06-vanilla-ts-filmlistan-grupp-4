@@ -7,6 +7,7 @@ import { createRootView } from "./view.ts";
 
 import { showCatalog } from "./app/catalog/actions.ts";
 import { showWatchlist } from "./app/watchlist/actions.ts";
+import { showDetail } from "./app/detail/actions.ts";
 
 // Track current view cleanup function
 let currentViewCleanup: ViewCleanup | null = null;
@@ -17,6 +18,30 @@ const app = document.querySelector("#app")!;
 // Mapping url -> to actions
 const handleRoute = () => {
   const path = window.location.pathname;
+
+  const detailPattern = /^\/detail\/(\d+)$/;
+  const detailMatch = path.match(detailPattern);
+
+  if (detailMatch) {
+    const id = detailMatch[1];
+    showDetail(id);
+    return;
+  }
+
+  if (path === "/") {
+    showCatalog();
+    return;
+  }
+
+  if (path === "/watchlist") {
+    showWatchlist();
+    return;
+  } else {
+    console.log("Not found!");
+    return;
+  }
+
+  /**
   switch (path) {
     case "/":
       showCatalog();
@@ -27,7 +52,7 @@ const handleRoute = () => {
     default:
       console.log("not found");
       return;
-  }
+  }**/
 };
 
 // Funktionen som renderar sidan on every state change

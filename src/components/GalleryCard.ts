@@ -11,7 +11,9 @@ export function createGalleryCard(props: GalleryCardProps) {
 
   card.innerHTML = `
           <li class="rounded-sm cursor-pointer" data-tmdb-id="${props.id}">
-            <img class="rounded" src="${props.posterUrl}" alt="${props.title}">
+            <a href='/detail/${props.id}'>
+              <img class="rounded" src="${props.posterUrl}" alt="${props.title}">
+            </a>
           </li>`;
 
   // Create add button;
