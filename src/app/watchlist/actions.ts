@@ -1,4 +1,6 @@
 import { getState, setState } from "../../store";
+import { toast } from "../../core/toast/toast";
+
 
 import { deleteWatchlistItem, getWatchlist, saveWatchlistItem } from "./api";
 import { createDraftFromCatalog } from "./model";
@@ -50,12 +52,11 @@ export async function addToWatchlist(item: CatalogItem) {
 
   if (!response.ok) {
     setState({
-      error: response.error,
       watchlist: currentList,
     });
 
-    // TODO: Make an Error or Toast component and handle display time there then delte his hardcoded timer.
-    setTimeout(() => setState({ error: null }), 1000);
+    toast.error("Could not add movie to watchlist");
+    return;
   }
 }
 
@@ -75,3 +76,9 @@ export async function removeFromWatchlist(movieId: string) {
     setTimeout(() => setState({ error: null }), 1000)
   }
 }
+
+// success feedback
+toast.success("Added to watchlist");
+    
+  }
+
