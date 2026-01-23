@@ -18,15 +18,15 @@ export function detailView(state: AppState): ViewElement {
 
   // Create Components
   const backButton = createButton({
-    value: "X",
+    value: "Close",
     onClick: () => history.back(),
-    classes: "bg-zinc-400",
+    classes: "bg-zinc-500",
   });
 
   // View DOM Template
   detailViewContainer.innerHTML = `
-    <header class="flex justify-between items-center">
-      <h1 class="text-3xl inline-block font-semibold my-4 uppercase border-y-4 border-dashed">Details</h1>
+    <header class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl inline-block font-semibold my-4 uppercase border-y-4 border-dashed">Movie</h1>
       <nav class="detail-nav col-span-full"></nav>
     </header>
     <section class="grid grid-cols-3 gap-8">
