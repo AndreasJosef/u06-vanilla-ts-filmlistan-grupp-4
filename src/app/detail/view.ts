@@ -4,7 +4,7 @@ import { createButton } from "../../components/Button";
 
 export function detailView(state: AppState): ViewElement {
   const detailViewContainer = document.createElement("div") as ViewElement;
-  detailViewContainer.className = "grid grid-cols-3 gap-8 mt-16";
+  detailViewContainer.className = "";
   const data = getDetailViewModel(state);
 
   // Return Loader if content has not arrived yet
@@ -18,28 +18,46 @@ export function detailView(state: AppState): ViewElement {
 
   // Create Components
   const backButton = createButton({
-    value: "Back",
+    value: "X",
     onClick: () => history.back(),
     classes: "bg-zinc-400",
   });
 
   // View DOM Template
   detailViewContainer.innerHTML = `
-    <nav class="detail-nav col-span-full"></nav>
-    <div><img src="${data.movie.posterUrl}" alt="${data.movie.title} Film Poster"></div>
-    <article class="col-span-2">
-      <h1 class="text-3xl mt-1 mb-2 font-semibold text-zinc-300">${data.movie.title}</h1>
-      <p class="text-xl text-zinc-500 mb-4">${data.movie.tagline}</p>
-      <p class="text-lg mb-2">${data.movie.description}</p>
-      <a class="text-xl" href="${data.movie.homepage}">Read More</a>
-    </article>
+    <header class="flex justify-between items-center">
+      <h1 class="text-3xl inline-block font-semibold my-4 uppercase border-y-4 border-dashed">Details</h1>
+      <nav class="detail-nav col-span-full"></nav>
+    </header>
+    <section class="grid grid-cols-3 gap-8">
+     <div><img src="${data.movie.posterUrl}" alt="${data.movie.title} Film Poster"></div>
+      <article class="col-span-2">
+        <h1 class="text-3xl mt-1 mb-2 font-semibold text-zinc-300">${data.movie.title}</h1>
+        <p class="text-xl text-zinc-500 mb-4">${data.movie.tagline}</p>
+        <p class="text-lg mb-2">${data.movie.description}</p>
+        <a class="text-xl" href="${data.movie.homepage}">Read More</a>
+      </article>
+    </section>
 
   `;
+
+  // ESC key support for closing detail view
+  const handleKeypress = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      history.back();
+    }
+  };
+
+  document.addEventListener("keydown", handleKeypress);
 
   // Register Components
   (detailViewContainer.querySelector(".detail-nav") as HTMLElement).prepend(
     backButton,
   );
+
+  detailViewContainer.cleanup = () => {
+    document.removeEventListener("keydown", handleKeypress);
+  };
 
   return detailViewContainer;
 }
