@@ -2,7 +2,7 @@ import type { AppState, ViewElement } from "../../types";
 
 import { getCatalogViewModel } from "./model";
 import { clearResult, searchMovies } from "../../app/catalog/actions";
-import { addToWatchlist } from "../watchlist/actions";
+import { addToWatchlist, removeFromWatchlist } from "../watchlist/actions";
 
 // Components
 import { createSearchBar } from "./components/SearchBar";
@@ -27,9 +27,9 @@ export function browseView(state: AppState) {
       onToggle: () => {
         if (!movie.isSaved) {
           addToWatchlist(movie.payload);
-        } else {
-          //  TODO: Write action that removes movie.id from watchlist.
-          console.log("remove from watchlist", movie.id);
+        } else if (movie.dbId) {
+          console.log("remove from watchlist", movie.dbId);
+          removeFromWatchlist(movie.dbId);
         }
       },
     });

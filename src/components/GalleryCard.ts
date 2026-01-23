@@ -29,16 +29,14 @@ export function createGalleryCard(props: GalleryCardProps) {
       button.textContent = "Add";
       button.classList.add("bg-cyan-400");
     } else {
-      button.textContent = "Saved";
-      button.classList.add("bg-green-400");
-      button.disabled = true;
+      button.textContent = "Remove";
+      button.classList.add("bg-amber-400");
     }
   }
 
-
   // run the the actions that were
   button.addEventListener("click", (e) => {
-    e.preventDefault()
+    e.preventDefault();
     props.onToggle();
   });
 
