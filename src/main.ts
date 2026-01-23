@@ -3,7 +3,7 @@ import "./global.css";
 import type { ViewCleanup, ViewElement } from "./types.ts";
 
 import { setRenderCallback, getState } from "./store";
-import { createRootView } from "./view.ts";
+import { createRootView } from "./app/root/view.ts";
 
 import { showCatalog } from "./app/catalog/actions.ts";
 import { showWatchlist } from "./app/watchlist/actions.ts";

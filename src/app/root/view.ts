@@ -1,14 +1,17 @@
-import type { AppState, ViewElement } from "./types";
+import type { AppState, ViewElement } from "../../types";
 
-import { browseView } from "./app/catalog/view";
-import { watchlistView } from "./app/watchlist/view";
-import { detailView } from "./app/detail/view";
+import { browseView } from "../catalog/view";
+import { watchlistView } from "../watchlist/view";
+import { detailView } from "../detail/view";
 
-import headerHTML from "./components/static/header/index.html?raw";
-import footerHTML from "./components/static/footer/index.html?raw";
+import headerHTML from "../../components/static/header/index.html?raw";
+import footerHTML from "../../components/static/footer/index.html?raw";
+import { getRootViewModel } from "./model";
 
 export function createRootView(state: AppState): ViewElement {
   const root = document.createElement("div") as ViewElement;
+  const { layout } = getRootViewModel(state);
+
   root.className = "app";
 
   // Header and Footer
@@ -36,10 +39,17 @@ export function createRootView(state: AppState): ViewElement {
       pageContent.innerText = "404 Not Found";
   }
 
+  if (layout === "standard") {
+    root.appendChild(headerContainer);
+    root.appendChild(pageContent);
+    root.appendChild(footerContainer);
+  }
+
+  if (layout === "focused") {
+    root.appendChild(pageContent);
+  }
+
   // Build the DOM
-  root.appendChild(headerContainer);
-  root.appendChild(pageContent);
-  root.appendChild(footerContainer);
 
   // Attach cleanup from the current view so we can call it in main
   if (pageContent.cleanup) {

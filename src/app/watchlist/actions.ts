@@ -73,6 +73,7 @@ export async function addToWatchlist(item: CatalogItem) {
 
 export async function removeFromWatchlist(movieId: string) {
   const currentList = getState().watchlist;
+  const deletedItem = currentList.find((movie) => movie.id === movieId);
 
   const updatedList = currentList.filter((movie) => movie.id !== movieId);
   setState({ watchlist: updatedList });
@@ -88,5 +89,7 @@ export async function removeFromWatchlist(movieId: string) {
     toast.error("Failed to remove movie");
   }
 
-  toast.success("Deleted movie from watchlist");
+  toast.success(
+    `Deleted Movie: ${deletedItem ? deletedItem.title : "Deleted Movie"}`,
+  );
 }
