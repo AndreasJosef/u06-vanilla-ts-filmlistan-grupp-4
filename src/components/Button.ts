@@ -2,15 +2,20 @@
 interface ButtonProps {
   value: string;
   onClick: () => void;
+  classes?: string;
 }
 
 export function createButton(props: ButtonProps) {
-  const { onClick, value } = props;
+  const { onClick, value, classes } = props;
 
   const button = document.createElement("button");
+  const baseStyles = "bg-cyan-400 px-3 py-1 rounded";
 
   button.textContent = value;
-  button.className = "bg-cyan-400 px-3 py-1 rounded";
+  classes
+    ? (button.className = `${baseStyles} ${classes}`)
+    : (button.className = baseStyles);
+
   button.addEventListener("click", onClick);
 
   return button;

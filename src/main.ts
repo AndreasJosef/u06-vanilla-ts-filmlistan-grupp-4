@@ -37,46 +37,36 @@ const handleRoute = () => {
     showWatchlist();
     return;
   } else {
+    // TODO: Make a not found view plus action to show
     console.log("Not found!");
     return;
   }
-
-  /**
-  switch (path) {
-    case "/":
-      showCatalog();
-      break;
-    case "/watchlist":
-      showWatchlist();
-      break;
-    default:
-      console.log("not found");
-      return;
-  }**/
 };
 
 // Funktionen som renderar sidan on every state change
 const renderApp = () => {
   const state = getState();
 
-  // Cleanup previous view before rendering new one
+  // Cleanup after previous view before rendering new one
   if (currentViewCleanup) {
     currentViewCleanup();
     currentViewCleanup = null;
   }
 
+  // Simply wipe the whole page
   app.innerHTML = "";
 
+  // UI = f(State);
   const rootView: ViewElement = createRootView(state);
   app.appendChild(rootView);
 
-  // Store cleanup function if available
+  // Store cleanup for calling on next re-render function if available
   if (rootView.cleanup) {
     currentViewCleanup = rootView.cleanup;
   }
 };
 
-// Subscribe renderApp to state changes
+// App rerenders on every state change
 setRenderCallback(renderApp);
 
 // Rerender-logic

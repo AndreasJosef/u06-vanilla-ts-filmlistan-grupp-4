@@ -3,6 +3,7 @@ export type MovieDetail = {
   title: string;
   tagline: string;
   homepage: string;
+  description: string;
   budget: number;
   releaseDate: number;
   revenue: number;
