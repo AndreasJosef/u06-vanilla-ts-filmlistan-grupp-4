@@ -1,7 +1,6 @@
 import { getState, setState } from "../../store";
 import { toast } from "../../core/toast/toast";
 
-
 import { deleteWatchlistItem, getWatchlist, saveWatchlistItem } from "./api";
 import { createDraftFromCatalog } from "./model";
 import type { CatalogItem } from "../catalog/types";
@@ -52,15 +51,12 @@ export async function addToWatchlist(item: CatalogItem) {
 
   if (response.ok) {
     const currentList = getState().watchlist;
-    const updatedList = currentList.map(movie =>
-      movie.tmdb_id === response.value?.tmdb_id
-        ? response.value
-        : movie
+    const updatedList = currentList.map((movie) =>
+      movie.tmdb_id === response.value?.tmdb_id ? response.value : movie,
     );
     setState({
-      watchlist: updatedList
+      watchlist: updatedList,
     });
-
   }
 
   if (!response.ok) {
@@ -78,19 +74,19 @@ export async function addToWatchlist(item: CatalogItem) {
 export async function removeFromWatchlist(movieId: string) {
   const currentList = getState().watchlist;
 
-  const updatedList = currentList.filter(movie => movie.id !== movieId);
+  const updatedList = currentList.filter((movie) => movie.id !== movieId);
   setState({ watchlist: updatedList });
-  console.log("it works")
+  console.log("it works");
 
   try {
     await deleteWatchlistItem(movieId);
   } catch (error) {
     setState({
       watchlist: currentList,
-      error: error instanceof Error ? error.message : "Failed to remove movie"
+      error: error instanceof Error ? error.message : "Failed to remove movie",
     });
-
+    toast.error("Failed to remove movie");
   }
-}
-// success feedback
 
+  toast.success("Deleted movie from watchlist");
+}
