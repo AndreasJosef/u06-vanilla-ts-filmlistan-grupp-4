@@ -1,5 +1,4 @@
 import type { AppState, ViewElement } from "../../types";
-import type { GalleryItemViewModel } from "./model";
 
 import { getCatalogViewModel } from "./model";
 import { clearResult, searchMovies } from "../../app/catalog/actions";
@@ -7,12 +6,7 @@ import { addToWatchlist, removeFromWatchlist } from "../watchlist/actions";
 
 // Components
 import { createSearchBar } from "./components/SearchBar";
-import { createGalleryCard } from "../../components/GalleryCard";
-
-export interface CatalogViewModel {
-  view_mode: string;
-  movies: GalleryItemViewModel[];
-}
+import { createGalleryCard } from "../../shared/components/GalleryCard";
 
 export function browseView(state: AppState) {
   const { view_mode, movies } = getCatalogViewModel(state);
@@ -62,6 +56,7 @@ export function browseView(state: AppState) {
   galleryCards.forEach((item) => galleryEl.appendChild(item));
 
   // handle click on list items
+  // TODO: Refactor this to be onOpen prop on the GalleryCardComponent as well.
   const handleGallerClick = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
 

@@ -1,9 +1,10 @@
+import { type Movie } from "../../shared/types/movies";
+
 import { getState, setState } from "../../store";
 import { toast } from "../../core/toast/toast";
 
 import { deleteWatchlistItem, getWatchlist, saveWatchlistItem } from "./api";
 import { createDraftFromCatalog } from "./model";
-import type { CatalogItem } from "../catalog/types";
 
 // Sets the current View to watchlist which will trigger a rerender
 export async function showWatchlist() {
@@ -37,7 +38,7 @@ export async function loadWatchlist() {
 }
 
 // Adds a new movie to the users watchlist
-export async function addToWatchlist(item: CatalogItem) {
+export async function addToWatchlist(item: Movie) {
   const currentList = getState().watchlist;
   const newItem = createDraftFromCatalog(item);
 

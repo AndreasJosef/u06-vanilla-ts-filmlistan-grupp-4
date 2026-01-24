@@ -1,16 +1,15 @@
-// Domain Model
-export type CatalogItem = {
-  tmdb_id: string;
+import type { Movie } from "../../shared/types/movies";
+
+export interface GalleryItemViewModel {
+  id: string;
+  dbId: string | null;
   title: string;
-  description: string;
-  vote_average: number;
-  release_date: string;
-  poster_path: string;
-};
+  posterUrl: string;
+  isSaved: boolean;
+  payload: Movie;
+}
 
-// TODO: Should add the detail type here as an extension of item base and then make this whole thing global so I can use it in both parsers wich I should also make global!
-
-// View Models
-export type CatalogItemViewModel = CatalogItem & {
-  inWatchlist: boolean;
-};
+export interface CatalogViewModel {
+  view_mode: string;
+  movies: GalleryItemViewModel[];
+}

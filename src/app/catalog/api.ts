@@ -1,5 +1,5 @@
-import { type CatalogItem } from "./types";
-import { type MovieDetail } from "../detail/types";
+import { type Movie } from "../../shared/types/movies";
+import { type MovieDetail } from "../../shared/types/movies";
 import { fetchSafeItem, fetchSafeList } from "../../core/api-engine";
 import { parseTMDBDetail, parseTmdbMovie } from "./parser";
 
@@ -24,11 +24,11 @@ const config: RequestInit = {
 
 // Loads the popular movies list from TMDB
 const fetchPopularMovies = async () =>
-  await fetchSafeList<CatalogItem>(TMBD_ENDPOINTS.base, parseTmdbMovie, config);
+  await fetchSafeList<Movie>(TMBD_ENDPOINTS.base, parseTmdbMovie, config);
 
 // Search for a movie on TMDB
 const fetchMovies = async (searchText: string) =>
-  await fetchSafeList<CatalogItem>(
+  await fetchSafeList<Movie>(
     TMBD_ENDPOINTS.search + searchText,
     parseTmdbMovie,
     config,

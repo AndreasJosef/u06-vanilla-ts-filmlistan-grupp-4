@@ -1,5 +1,5 @@
 // A component that renders the the search input and then dynamically a button the triggers either search or clear action depending on AppState view_mode
-import { createButton } from "../../../components/Button";
+import { createButton } from "../../../shared/components/Button";
 import { createInput } from "./search";
 
 export interface SearchBarProps {

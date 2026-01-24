@@ -1,12 +1,12 @@
 import { type Result, ok, fail } from "../../core/result";
-import { type CatalogItem } from "./types";
-import { type MovieDetail } from "../detail/types";
+import { type Movie } from "../../shared/types/movies";
+import { type MovieDetail } from "../../shared/types/movies";
 
 /**
  * Parses a generic movie result from TMDB (Search or Popular list).
  * Returns the 'CatalogItemBase' shape, which satisfies the CatalogItem union.
  */
-export function parseTmdbMovie(input: unknown): Result<CatalogItem> {
+export function parseTmdbMovie(input: unknown): Result<Movie> {
   if (!input || typeof input !== "object") {
     return fail("Invalid TMDB data: Not an object");
   }
@@ -20,14 +20,14 @@ export function parseTmdbMovie(input: unknown): Result<CatalogItem> {
 
   // Map external keys to internal Types
   return ok({
-    tmdb_id: String(data.id), // Convert TMDB number to your string type
+    tmdbId: String(data.id), // Convert TMDB number to your string type
     title: data.title,
-    description: data.overview || "", // Map 'overview' -> 'description'
-    vote_average: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
-    release_date: data.release_date || "Unknown",
+    overview: data.overview || "", // Map 'overview' -> 'description'
+    ratingAvg: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
+    releaseDate: data.release_date || "Unknown",
 
     // how to create an image urls: https://developer.themoviedb.org/docs/image-basics
-    poster_path: data.poster_path
+    posterUrl: data.poster_path
       ? `https:image.tmdb.org/t/p/w500${data.poster_path}`
       : "https://placehold.co/400x600?text=No+Image",
   });
@@ -51,17 +51,15 @@ export function parseTMDBDetail(input: unknown): Result<MovieDetail> {
 
   // Map external keys to internal Types
   return ok({
-    id: String(data.id), // Convert TMDB number to your string type
+    tmdbId: String(data.id), // Convert TMDB number to your string type
     title: data.title,
-    description: data.overview || "", // Map 'overview' -> 'description'
+    overview: data.overview || "", // Map 'overview' -> 'description'
     tagline: data.tagline || "",
-    ratingTMDB: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
+    ratingAvg: data.vote_average || 0, // Map 'vote_average' -> 'rating_avg'
     releaseDate: data.release_date || "Unknown",
     homepage: data.homepage || "",
     budget: data.budget || 0,
     revenue: data.revenue || 0,
-    ratingUser: 0,
-    noteUser: "",
 
     // how to create an image urls: https://developer.themoviedb.org/docs/image-basics
     posterUrl: data.poster_path

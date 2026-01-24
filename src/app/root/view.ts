@@ -4,8 +4,8 @@ import { browseView } from "../catalog/view";
 import { watchlistView } from "../watchlist/view";
 import { detailView } from "../detail/view";
 
-import headerHTML from "../../components/static/header/index.html?raw";
-import footerHTML from "../../components/static/footer/index.html?raw";
+import headerHTML from "../../shared/components/static/header/index.html?raw";
+import footerHTML from "../../shared/components/static/footer/index.html?raw";
 import { getRootViewModel } from "./model";
 
 export function createRootView(state: AppState): ViewElement {

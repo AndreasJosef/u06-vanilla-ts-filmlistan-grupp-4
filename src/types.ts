@@ -1,12 +1,12 @@
-import type { CatalogItem } from "./app/catalog/types";
+import type { Movie } from "./shared/types/movies";
 import type { WatchlistItem } from "./app/watchlist/types";
-import type { MovieDetail } from "./app/detail/types";
+import type { MovieDetail } from "./shared/types/movies";
 
 // Defining the shape of possible states
 export interface AppState {
   currentView: "catalog" | "watchlist" | "detail";
-  popularMovies: CatalogItem[];
-  searchResult: CatalogItem[];
+  popularMovies: Movie[];
+  searchResult: Movie[];
   watchlist: WatchlistItem[];
   error: string | null;
   movieDetails: Record<string, MovieDetail>;

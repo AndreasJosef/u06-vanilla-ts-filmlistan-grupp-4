@@ -1,5 +1,5 @@
 import type { AppState, ViewElement } from "../../types";
-import { createGalleryCard } from "../../components/GalleryCard";
+import { createGalleryCard } from "../../shared/components/GalleryCard";
 import { getWatchListViewModel } from "./model";
 import { removeFromWatchlist } from "./actions";
 

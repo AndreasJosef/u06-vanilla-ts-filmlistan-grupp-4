@@ -11,17 +11,7 @@
  */
 
 import type { AppState } from "../../types";
-import type { CatalogItem } from "./types";
-import type { CatalogViewModel } from "./view";
-
-export interface GalleryItemViewModel {
-  id: string;
-  dbId: string | null;
-  title: string;
-  posterUrl: string;
-  isSaved: boolean;
-  payload: CatalogItem;
-}
+import type { CatalogViewModel } from "./types";
 
 export function getCatalogViewModel(state: AppState): CatalogViewModel {
   // and all the ids in watchlist, using Set for better perormance lookup set vs find
@@ -39,18 +29,14 @@ export function getCatalogViewModel(state: AppState): CatalogViewModel {
   const rawMovies = isSearch ? state.searchResult : state.popularMovies;
 
   const movies = rawMovies.map((movie) => {
-    const lookupKey = String(movie.tmdb_id);
+    const lookupKey = String(movie.tmdbId);
     const savedDbId = watchlistIDMap.get(lookupKey);
 
-    console.log("Looking for:", lookupKey);
-    console.log("Map has:", watchlistIDMap.keys());
-    console.log("Result:", savedDbId !== null);
-
     return {
-      id: movie.tmdb_id,
+      id: movie.tmdbId,
       dbId: savedDbId || null,
       title: movie.title,
-      posterUrl: movie.poster_path,
+      posterUrl: movie.posterUrl,
       isSaved: savedDbId !== null && savedDbId !== undefined,
       payload: movie,
     };
