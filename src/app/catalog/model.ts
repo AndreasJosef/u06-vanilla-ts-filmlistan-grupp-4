@@ -1,3 +1,15 @@
+/**
+ * @module CatalogModel
+ * @description
+ * The brain of the movie browsing and search experience.
+ * Transforms raw movie lists into GalleryCard props and handles
+ * the logic for the "Search vs Popular" state.
+ *
+ * @architectural-role Model
+ * @input  {AppState}
+ * @output {CatalogViewModel}
+ */
+
 import type { AppState } from "../../types";
 import type { CatalogItem } from "./types";
 import type { CatalogViewModel } from "./view";
@@ -10,20 +22,6 @@ export interface GalleryItemViewModel {
   isSaved: boolean;
   payload: CatalogItem;
 }
-
-/** function toGalleryItem(
-  movie: CatalogItem,
-  watchlistIDs: Set<string>,
-): GalleryItemViewModel {
-  return {
-    id: movie.tmdb_id,
-    dbId: null,
-    title: movie.title,
-    posterUrl: movie.poster_path,
-    isSaved: watchlistIDs.has(movie.tmdb_id),
-    payload: movie,
-  };
-} **/
 
 export function getCatalogViewModel(state: AppState): CatalogViewModel {
   // and all the ids in watchlist, using Set for better perormance lookup set vs find
