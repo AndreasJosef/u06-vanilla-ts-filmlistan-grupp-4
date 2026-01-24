@@ -1,5 +1,7 @@
 import type { AppState } from "../../types";
-import type { CatalogItem, CatalogViewModel } from "./types";
+import type { CatalogItem } from "./types";
+import type { CatalogViewModel } from "./view";
+
 export interface GalleryItemViewModel {
   id: string;
   dbId: string | null;

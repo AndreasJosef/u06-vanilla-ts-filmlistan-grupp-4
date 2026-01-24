@@ -3,7 +3,6 @@ export interface GalleryCardProps {
   title: string;
   posterUrl: string;
   isSaved: boolean;
-  showRemoveButton?: boolean;
   onToggle: () => void;
 }
 
@@ -21,17 +20,12 @@ export function createGalleryCard(props: GalleryCardProps) {
   const button = document.createElement("button");
   button.className = "rounded px-3 py-1 cursor-pointer";
 
-  if (props.showRemoveButton) {
-    button.textContent = "Delete";
-    button.classList.add("bg-red-400");
+  if (!props.isSaved) {
+    button.textContent = "Add";
+    button.classList.add("bg-cyan-400");
   } else {
-    if (!props.isSaved) {
-      button.textContent = "Add";
-      button.classList.add("bg-cyan-400");
-    } else {
-      button.textContent = "Remove";
-      button.classList.add("bg-amber-400");
-    }
+    button.textContent = "Remove";
+    button.classList.add("bg-amber-400");
   }
 
   // run the the actions that were

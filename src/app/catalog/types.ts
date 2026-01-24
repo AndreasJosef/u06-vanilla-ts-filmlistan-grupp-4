@@ -1,5 +1,3 @@
-import type { GalleryItemViewModel } from "./model";
-
 // Domain Model
 export type CatalogItem = {
   tmdb_id: string;
@@ -16,8 +14,3 @@ export type CatalogItem = {
 export type CatalogItemViewModel = CatalogItem & {
   inWatchlist: boolean;
 };
-
-export interface CatalogViewModel {
-  view_mode: string;
-  movies: GalleryItemViewModel[];
-}

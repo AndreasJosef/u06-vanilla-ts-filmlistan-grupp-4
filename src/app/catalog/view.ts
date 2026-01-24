@@ -1,4 +1,5 @@
 import type { AppState, ViewElement } from "../../types";
+import type { GalleryItemViewModel } from "./model";
 
 import { getCatalogViewModel } from "./model";
 import { clearResult, searchMovies } from "../../app/catalog/actions";
@@ -7,6 +8,11 @@ import { addToWatchlist, removeFromWatchlist } from "../watchlist/actions";
 // Components
 import { createSearchBar } from "./components/SearchBar";
 import { createGalleryCard } from "../../components/GalleryCard";
+
+export interface CatalogViewModel {
+  view_mode: string;
+  movies: GalleryItemViewModel[];
+}
 
 export function browseView(state: AppState) {
   const { view_mode, movies } = getCatalogViewModel(state);
