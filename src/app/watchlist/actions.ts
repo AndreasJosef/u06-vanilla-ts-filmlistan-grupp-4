@@ -78,7 +78,6 @@ export async function removeFromWatchlist(movieId: string) {
 
   const updatedList = currentList.filter((movie) => movie.id !== movieId);
   setState({ watchlist: updatedList });
-  console.log("it works");
 
   try {
     await deleteWatchlistItem(movieId);

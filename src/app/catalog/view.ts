@@ -21,6 +21,7 @@ export function browseView(state: AppState) {
     onClear: clearResult,
   });
 
+  // TODO: Should make the WatchlistToggle a component that takes the dbID as prop makes it cleaner here and use the same pattern in details/view and model
   const galleryCards = movies.map((movie) => {
     return createGalleryCard({
       ...movie,

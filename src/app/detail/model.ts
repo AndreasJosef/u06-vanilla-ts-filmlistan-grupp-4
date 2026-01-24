@@ -9,10 +9,22 @@ export function getDetailViewModel(state: AppState): DetailViewModel | null {
   }
 
   const watchlistIDs = new Set(state.watchlist.map((movie) => movie.tmdb_id));
+  const isSaved = watchlistIDs.has(focusedMovieId);
+
+  let dbId: string | null = null;
+
+  const savedMovie = state.watchlist.find(
+    (item) => item.tmdb_id === focusedMovieId,
+  );
+
+  if (savedMovie) {
+    dbId = savedMovie.id;
+  }
 
   return {
     movie: state.movieDetails[focusedMovieId],
-    isSaved: watchlistIDs.has(focusedMovieId),
+    dbId,
+    isSaved,
     isSeen: false,
   };
 }

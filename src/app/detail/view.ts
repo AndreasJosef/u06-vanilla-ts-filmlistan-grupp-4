@@ -1,6 +1,7 @@
 import type { AppState, ViewElement } from "../../types";
 import { getDetailViewModel } from "./model";
 import { createButton } from "../../shared/components/Button";
+import { addToWatchlist, removeFromWatchlist } from "../watchlist/actions";
 
 export function detailView(state: AppState): ViewElement {
   const detailViewContainer = document.createElement("div") as ViewElement;
@@ -23,6 +24,17 @@ export function detailView(state: AppState): ViewElement {
     classes: "bg-zinc-500",
   });
 
+  const toggleButton = createButton({
+    value: data.isSaved ? "Remove" : "Add",
+    onClick: () => {
+      if (!data.isSaved) {
+        addToWatchlist(data.movie);
+      } else if (data.dbId) {
+        removeFromWatchlist(data.dbId);
+      }
+    },
+  });
+
   // View DOM Template
   detailViewContainer.innerHTML = `
     <header class="flex justify-between items-center mb-6">
@@ -31,12 +43,12 @@ export function detailView(state: AppState): ViewElement {
     </header>
     <section class="grid grid-cols-3 gap-8">
      <div><img src="${data.movie.posterUrl}" alt="${data.movie.title} Film Poster"></div>
-      <article class="col-span-2">
-        <h1 class="text-3xl mt-1 mb-2 font-semibold text-zinc-300">${data.movie.title}</h1>
-        <p class="text-xl text-zinc-500 mb-4">${data.movie.tagline}</p>
-        <p class="text-lg mb-2">${data.movie.overview}</p>
-        <a class="text-xl" href="${data.movie.homepage}">Read More</a>
-      </article>
+     <article class="col-span-2">
+       <h1 class="text-3xl mt-1 mb-2 font-semibold text-zinc-300">${data.movie.title}</h1>
+       <p class="text-xl text-zinc-500 mb-4">${data.movie.tagline}</p>
+       <p class="text-lg mb-2">${data.movie.overview}</p>
+       <a class="text-xl" href="${data.movie.homepage}">Read More</a>
+     </article>
     </section>
 
   `;
@@ -51,7 +63,8 @@ export function detailView(state: AppState): ViewElement {
   document.addEventListener("keydown", handleKeypress);
 
   // Register Components
-  (detailViewContainer.querySelector(".detail-nav") as HTMLElement).prepend(
+  (detailViewContainer.querySelector(".detail-nav") as HTMLElement).append(
+    toggleButton,
     backButton,
   );
 
