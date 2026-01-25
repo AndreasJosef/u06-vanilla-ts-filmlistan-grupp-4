@@ -9,8 +9,8 @@ export function watchlistView(state: AppState): ViewElement {
   const watchlistMovies = getWatchListViewModel(state);
 
   watchlistEl.innerHTML = `
-    <section>
-      <h2>Watchlist</h2>
+    <section class="mt-6">
+      <h2 class="text-2xl my-2">Watchlist <span class="text-neutral-500 italic text-xl">${watchlistMovies.length} Movies</span></h2>
       <ul class="max-w-full grid grid-cols-3 auto-rows-auto gap-4"></ul>
     </section>
 `;

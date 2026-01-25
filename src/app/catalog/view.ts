@@ -41,7 +41,7 @@ export function browseView(state: AppState) {
     <section>
       <div class="search-container"></div>
       <p>${state.error ? state.error : ""}</p>
-      <h2 class="text-2xl">${view_mode}</h2>
+      <h2 class="text-2xl my-2">${view_mode}</h2>
       <!-- Gallery -->
       <ul class="max-w-full grid grid-cols-3 auto-rows-auto gap-4"></ul>
     </section>
