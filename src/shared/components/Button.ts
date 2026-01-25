@@ -9,7 +9,7 @@ export function createButton(props: ButtonProps) {
   const { onClick, value, classes } = props;
 
   const button = document.createElement("button");
-  const baseStyles = "bg-cyan-400 px-3 py-1 rounded";
+  const baseStyles = "px-3 py-1 rounded";
 
   button.textContent = value;
   classes

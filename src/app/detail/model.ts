@@ -12,11 +12,16 @@ export function getDetailViewModel(state: AppState): DetailViewModel | null {
     (item) => item.tmdb_id === focusedMovieId,
   );
 
+  const userRating =
+    watchlistEntry?.status === "watched" ? watchlistEntry.personal_rating : 0;
+
   return {
     movie: state.movieDetails[focusedMovieId],
     dbId: watchlistEntry ? watchlistEntry.id : null,
     // since watchlist entry might be undefined I first force to be a boolean with! but since I want the original truth value and not invert I invert it again !!
     isSaved: !!watchlistEntry,
-    isSeen: false,
+    isSeen: watchlistEntry?.status === "watched",
+    status: watchlistEntry?.status || "watchlist",
+    userRating,
   };
 }

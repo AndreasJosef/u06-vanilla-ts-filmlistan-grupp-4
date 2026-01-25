@@ -1,7 +1,8 @@
 import type { AppState, ViewElement } from "../../types";
 import { getDetailViewModel } from "./model";
 import { createButton } from "../../shared/components/Button";
-import { addToWatchlist, removeFromWatchlist } from "../watchlist/actions";
+import { saveMovieRating, toggleWatchlist } from "../watchlist/actions";
+import { createStarRating } from "./components/StarRating";
 
 export function detailView(state: AppState): ViewElement {
   const detailViewContainer = document.createElement("div") as ViewElement;
@@ -18,28 +19,40 @@ export function detailView(state: AppState): ViewElement {
   }
 
   // Create Components
+  const nav = document.createElement("nav");
+  nav.className = "detail-nav flex col-span-full gap-4";
+
+  if (data.isSaved && data.dbId) {
+    const ratingButtons = createStarRating({
+      initialRating: data.isSeen ? data.userRating : 0,
+      onRate: (rating) => saveMovieRating(data.dbId, rating),
+      interactive: true,
+    });
+
+    nav.append(ratingButtons);
+  }
+
+  const toggleButton = createButton({
+    value: data.isSaved ? "Remove" : "Add",
+    onClick: () => toggleWatchlist(data.movie, data.dbId),
+    classes: data.isSaved
+      ? "bg-amber-500 hover:bg-amber-600 backdrop-blur"
+      : "bg-cyan-500 hover:bg-cyan-600",
+  });
+  nav.append(toggleButton);
+
   const backButton = createButton({
     value: "Close",
     onClick: () => history.back(),
     classes: "bg-zinc-500",
   });
-
-  const toggleButton = createButton({
-    value: data.isSaved ? "Remove" : "Add",
-    onClick: () => {
-      if (!data.isSaved) {
-        addToWatchlist(data.movie);
-      } else if (data.dbId) {
-        removeFromWatchlist(data.dbId);
-      }
-    },
-  });
+  nav.append(backButton);
 
   // View DOM Template
   detailViewContainer.innerHTML = `
     <header class="flex justify-between items-center mb-6">
       <h1 class="text-3xl inline-block font-semibold my-4 uppercase border-y-4 border-dashed">Movie</h1>
-      <nav class="detail-nav col-span-full"></nav>
+      <!-- <nav class="detail-nav col-span-full"></nav> -->
     </header>
     <section class="grid grid-cols-3 gap-8">
      <div><img src="${data.movie.posterUrl}" alt="${data.movie.title} Film Poster"></div>
@@ -50,7 +63,6 @@ export function detailView(state: AppState): ViewElement {
        <a class="text-xl" href="${data.movie.homepage}">Read More</a>
      </article>
     </section>
-
   `;
 
   // ESC key support for closing detail view
@@ -63,10 +75,13 @@ export function detailView(state: AppState): ViewElement {
   document.addEventListener("keydown", handleKeypress);
 
   // Register Components
+  (detailViewContainer.querySelector("header") as HTMLElement).append(nav);
+  /**
   (detailViewContainer.querySelector(".detail-nav") as HTMLElement).append(
+    toggleSeenButton,
     toggleButton,
     backButton,
-  );
+  );**/
 
   detailViewContainer.cleanup = () => {
     document.removeEventListener("keydown", handleKeypress);

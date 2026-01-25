@@ -4,6 +4,7 @@ import {
   fetchSafeList,
   safePost as postSafe,
   safeDelete,
+  updateSafe,
 } from "../../core/api-engine";
 import { parseWatchlistItem } from "./parser";
 
@@ -50,4 +51,16 @@ export async function saveWatchlistItem(item: WatchlistItem) {
 
 export async function deleteWatchlistItem(movieId: string) {
   return await safeDelete(`${API_BASE_URL}/movies/${movieId}`, configDelete);
+}
+
+export async function updateWatchlistItemStatus(
+  movieId: string,
+  movie: WatchlistItem,
+) {
+  return await updateSafe<WatchlistItem>(
+    `${API_BASE_URL}/movies/${movieId}`,
+    movie,
+    { ...config },
+    parseWatchlistItem,
+  );
 }

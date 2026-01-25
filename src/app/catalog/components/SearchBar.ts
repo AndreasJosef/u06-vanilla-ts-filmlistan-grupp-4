@@ -35,11 +35,13 @@ export function createSearchBar(props: SearchBarProps) {
     actionButton = createButton({
       value: "Clear",
       onClick: props.onClear,
+      classes: "bg-neutral-500",
     });
   } else {
     actionButton = createButton({
       value: "Search",
       onClick: triggerSearchAction,
+      classes: "bg-cyan-500",
     });
   }
 
