@@ -144,7 +144,7 @@ function generateMarkdown() {
       outputBody += `## 📂 \`${relativePath}\`\n\n`;
 
       if (fileDescription) {
-        outputBody += `> ${fileDescription}\n\n`;
+        outputBody += `${fileDescription}\n\n`;
       } else {
         outputBody += `> 🔴 **FILE MISSING DESCRIPTION**\n\n`;
       }
