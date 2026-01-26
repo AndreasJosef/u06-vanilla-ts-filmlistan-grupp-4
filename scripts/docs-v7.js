@@ -144,7 +144,7 @@ function generateMarkdown() {
       outputBody += `## 📂 \`${relativePath}\`\n\n`;
 
       if (fileDescription) {
-        outputBody += `${fileDescription}\n\n`;
+        outputBody += `**${fileDescription}**\n\n`;
       } else {
         outputBody += `> 🔴 **FILE MISSING DESCRIPTION**\n\n`;
       }
@@ -167,7 +167,7 @@ function generateMarkdown() {
     totalItems === 0 ? 100 : Math.round((documentedItems / totalItems) * 100);
   const color = coverage > 80 ? "green" : coverage > 50 ? "orange" : "red";
 
-  let header = `# Field Logic Reference\n\n`;
+  let header = `# Reference Docs\n\n`;
   header += `![Coverage](https://img.shields.io/badge/Coverage-${coverage}%25-${color})\n`;
   header += `\n**Total Exports:** ${totalItems} | **Documented:** ${documentedItems} | **Undocumented:** ${totalItems - documentedItems}\n`;
   if (missingFiles > 0)

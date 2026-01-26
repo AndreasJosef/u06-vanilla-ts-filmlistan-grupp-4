@@ -1,4 +1,4 @@
-# Field Logic Reference
+# Reference Docs
 
 ![Coverage](https://img.shields.io/badge/Coverage-12%25-red)
 
@@ -97,12 +97,12 @@ export interface InputProps
 
 ## 📂 `src/app/catalog/model.ts`
 
-The brain of the movie browsing and search experience.
+**The brain of the movie browsing and search experience.
 Transforms raw movie lists into GalleryCard props and handles
 the logic for the "Search vs Popular" state.
 @architectural-role Model
 @input  {AppState}
-@output {CatalogViewModel}
+@output {CatalogViewModel}**
 
 ### 🔴 **getCatalogViewModel**
 _No documentation provided._
@@ -183,10 +183,10 @@ export function showDetail(id: string)
 
 ## 📂 `src/app/detail/components/MovieStats.ts`
 
-A static row of additional facts about the parent film
+**A static row of additional facts about the parent film
 Features:
 - shows relaease date, average rating, revenue, budget
-- TODO mobile first responsive
+- TODO mobile first responsive**
 
 ###  **MovieStatsProps**
 Configuration for the MovieStats
@@ -542,8 +542,8 @@ export function safePost<T>( url: string, payload: T, config: RequestInit =
 
 ## 📂 `src/core/result.ts`
 
-A standard container for an operation that might fail.
-This is based on the Railway pattern.
+**A standard container for an operation that might fail.
+This is based on the Railway pattern.**
 
 ### 🔴 **fail**
 _No documentation provided._
@@ -671,10 +671,10 @@ export interface GalleryCardProps
 
 ## 📂 `src/shared/types/movies.ts`
 
-The Data Definition of a "Movie" in Filmkollen.
+**The Data Definition of a "Movie" in Filmkollen.
 This type represents a movie as it exists
 in our domain, regardless of whether it is being viewed in the
-Catalog the Detail view.
+Catalog the Detail view.**
 
 ### 🔴 **MovieDetail**
 _No documentation provided._
