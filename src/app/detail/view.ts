@@ -2,12 +2,16 @@ import type { AppState, ViewElement } from "../../types";
 import { getDetailViewModel } from "./model";
 import { createButton } from "../../shared/components/Button";
 import { saveMovieRating, toggleWatchlist } from "../watchlist/actions";
+
 import { createStarRating } from "./components/StarRating";
+import { createMovieStats } from "./components/MovieStats";
 
 export function detailView(state: AppState): ViewElement {
   const detailViewContainer = document.createElement("div") as ViewElement;
   detailViewContainer.className = "";
   const data = getDetailViewModel(state);
+
+  const stats = createMovieStats({});
 
   // Return Loader if content has not arrived yet
   if (!data) {

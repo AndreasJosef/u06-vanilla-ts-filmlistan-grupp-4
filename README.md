@@ -1,347 +1,60 @@
-# Projektuppgift: Filmkollen 🍿
-
-## 📋 Översikt
-
-Ni ska utveckla en applikation för att hålla koll på filmer där användare kan bläddra bland filmer, hantera sin watchlist och hålla reda på sedda filmer med betyg och recensioner. Syftet med uppgiften är att öva på API‑integration, CRUD‑operationer och att bygga en strukturerad TypeScript‑applikation.
-
-Ni ska utgå från den projektstruktur som föreslås i det här repot (mer resonemang om strukturen finns [här](https://devdecodes.medium.com/building-modular-web-apps-with-vanilla-javascript-no-frameworks-needed-631710bae703)):
-
-```
-src/
-├── components/               // Återanvändbara komponenter (valfritt)
-├── assets/                   // Bilder, ikoner m.m.
-├── pages/                    // Sidvyer (valfritt - om en vy är en sida)
-├── views/                    // Vyer kopplade till olika routes
-│   ├── browse/
-│   ├── watchlist/
-│   ├── watched/
-│   └── static/
-├── services/
-│   ├── tmdbApi.ts            // fetch-funktioner mot TMDB‑API 
-│   └── movieApi.ts           // fetch-funktioner för att spara filmer i watchlist (Node-js/Express/SQLLite backend-API)
-│                            
-├── lib/
-│   └── store.ts              // Hanterar globalt state
-└── types/
-    └── movie.ts              // Typer/interfaces som delas mellan flera delar av appen
-```
+# Filmkollen – Projektrapport
 
----
+## Sammanfattning
 
-## 🚀 Krav
+Filmkollen är en Single Page Application (SPA) för att utforska filmer och hantera en personlig "Watchlist". Applikationen låter användare söka filmer, spara dem, och betygsätta sedda titlar. Arkitekturen är byggd för att vara skalbar och strikt typsäker, med fokus på en tydlig enkelriktad dataflödeskedja.
 
-### 1. Söka och browsa bland filmer (`/` eller `/browse`)
+## Arkitektur & Designval
 
-**Använd fetch() för att hämta från TMDB‑API:et:**
+### Feature Sliced Design
 
-- Utan sökterm:
-  - Visa en lista med filmer (t.ex. "Popular" från TMDB som standardläge)
-- Med sökterm:
-  - Visa sökresultat från TMDB‑API i samma lista 
-- Varje filmkort ska visa:
-  - Filmposter, titel, betyg, releaseår och en kort beskrivning
-- Varje filmkort ska ha:
-  - "Lägg till i Watchlist"-knapp
-  - "Markera som sedd"-knapp
-  - Länk/knapp för att visa detaljer
-  - Visuell indikator om filmen redan finns i watchlist eller som watched
+Vi omstrukturerade projektet från en lager-baserad struktur till en **Feature Sliced** arkitektur. Varje huvudfunktion (`catalog`, `detail`, `watchlist`) lever i sin egen mapp under `src/app` och innehåller alla sina beståndsdelar: *actions, api, model* och *view*.
 
+* **Fördel:** Detta eliminerade cirkulära beroenden och gör koden modulär. Vi kan i teorin radera mappen `watchlist` utan att `catalog` slutar fungera.
+* **Shared Kernel:** Gemensamma typer och komponenter (som knappar och stjärnor) lever i `src/shared` och kan importeras av alla features.
 
-### 2. Användarens att-se-lista (`/watchlist`)
+### State Management & Router
 
-**Visa filmer du vill se:**
+Vi valde att förenkla vår `Store` drastiskt genom att flytta alla `setState`-operationer till **Actions**. Våra vyer får aldrig modifiera state direkt, vilket gör felsökning enklare.
 
-- Visa alla filmer i din watchlist (lagras via backend‑API:et)
-- Varje film ska visa:
-  - Poster, titel, releaseår, betyg
-  - Datum när den lades till i watchlisten
-  - "Markera som sedd"-knapp
-- Visa tom‑state om watchlisten är tom
-- Visa totalt antal filmer i watchlist
-
-### 3. Lista på redan sedda filmer (`/watched`)
-
-**Håll reda på filmer du redan har sett:**
-
-- Visa alla sedda filmer
-- Varje film visar:
-  - Poster, titel, releaseår
-  - Ditt personliga betyg (1–5 stjärnor)
-  - Toggle "Markera som favorit"
-  - "Ta bort"-knapp
-  - "Redigera betyg/recension"-knapp
-- Filteralternativ:
-  - Alla sedda filmer
-  - Endast favoriter
-  - Efter betyg (5 stjärnor, 4 stjärnor, osv.)
-
-### 4. Movie Details‑vy (modal eller formulär)
-
-**Visa grundläggande information och ge möjlighet att lägga till/markera som sedd samt redigera ditt betyg och din recension för en vald film:**
-
-- Enkel vy som kan vara:
-  - En modal ovanpå nuvarande sida **eller**
-  - En egen sida med ett formulär
-- Visa minst:
-  - Poster
-  - Titel
-  - TMDB‑betyg (från API:t)
-- Tillgängliga åtgärder (knappar/formulärfält):
-  - Lägg till i Watchlist
-  - Markera som sedd
-- Om filmen är sedd:
-  - Visa/ändra ditt personliga betyg (1–5)
-  - Visa/ändra din recension/anteckning
-
----
-
-## 🏗️ Tekniska instruktioner
-
-### 1. Hur du använder TMDB för att hämta filmdata
-
-- [The Movie Database (TMDB) API](https://www.themoviedb.org/settings/api) – gratis och bra dokumentation
+Applikationen drivs helt av URL:en. Vi implementerade en `handleRoute` i `main.ts` som lyssnar på URL-förändringar och omvandlar dem till state-events. Detta innebär att URL:en alltid är "Single Source of Truth" för vilken vy som visas, vilket garanterar att bakåt- och framåtknapparna i webbläsaren fungerar korrekt.
 
-Kom igång med TMDB på [denna länk](https://developer.themoviedb.org/docs/getting-started). Registrera dig och hämta API-nyckel. 
+### Core: Type-Safe API Engine
 
-> **OBS!** TMDB använder ni **endast** för att hämta filmdata (listor, sök, detaljer, bilder).  
-> All funktionalitet kring **watchlist, sedda filmer, favoriter, personliga betyg och recensioner** ska implementeras via kursens **Express‑backend‑API**, *inte* via TMDB:s egna “account/watchlist/favorite”-endpoints.
+För att hantera kommunikation med TMDB och vår backend skrev vi en generisk och typsäker wrapper runt `fetch`-API:et i `core/api-engine.ts`.
 
-Skapa en API‑service‑modul (`src/services/tmdbApi.ts`):
+* Den hanterar nätverksfel och JSON-parsning centralt.
+* Den returnerar ett `Result<T>`-objekt, vilket tvingar oss att hantera både lyckade anrop och fel i UI-lagret.
 
-```
-// Konfiguration
+## Arbetsmetodik
 
-const TMDB_API_KEY = 'your_api_key_here';
-const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-```
-Läs mer under [Getting Started](api.themoviedb.org)
+### Compiler Driven Development (CDD)
 
+Vi använde TypeScript-kompilatorn som ett aktivt utvecklingsverktyg snarare än bara en kontrollant. Vårt flöde för att lägga till ny funktionalitet var:
 
-### 2. State Management
+1. **Modellera:** Lägg till en ny typ eller fält i en *View Model* (t.ex. `userRating`).
+2. **Lyssna:** Låt kompilatorn visa alla ställen där koden nu "går sönder" (röda varningar).
+3. **Implementera:** Fixa felen systematiskt tills kompilatorn är nöjd.
+Detta gjorde refactoring tryggt och effektivt.
 
-Bygg ut `Store`‑klassen så att den kan hantera **allt centralt film‑state** (browse‑lista, watchlist, watched, vald film, loading‑status) och anropa en render‑funktion när state ändras.
-(Ett inledande exempel finns i  ```lib/store.ts```)
+### Dokumentation som Verktyg
 
-Lokalt state (t.ex. i vyer/komponenter) kan du fortfarande använda för små, temporära saker – som öppna/stängda modaler, formulärfält eller vilken flik som är aktiv – men **delad data mellan vyer** ska ligga i `Store`.
+I takt med att projektet växte insåg vi svårigheten i att kommunicera kodbasens struktur till varandra och utomstående. Eftersom vi inte hade skrivit dokumentation löpande från start, utvecklade vi ett eget verktyg (scripts/docs.js) för att snabbt komma ikapp.
 
+Vi designade scriptet för att vara "brutalt ärligt": det genererar inte bara en manual över det som finns, utan listar explicit alla funktioner och filer som saknar dokumentation (markerade med röda varningssymboler). Detta synliggjorde våra "knowledge gaps" och förvandlade dokumentationsarbetet från en abstrakt uppgift till en konkret att-göra-lista där vi systematiskt kunde beta av de röda prickarna.
 
-### 3. Använda TypeScript
+En exempel på den dokumentationen som scriptet genererar finns under `./REFERENCE.md`
 
-- Definiera tydliga interfaces/typer för alla datastrukturer
-- Ingen `any` (använd `unknown` vid behov)
+## Styrkor och Brister
 
-```typescript
-// Obs! Dessa datastrukturer är ett förslag och kan ändras!
+### Styrkor
 
-export type MovieStatus = "watchlist" | "watched";
+* **Data Isolation:** Varje feature använder sina egna *View Models* för att slå ihop (merge) data från `shared/types`. Det gör att vi undviker enorma, svårhanterliga objekt som skickas runt i appen.
+* **Utbyggbarhet:** Arkitekturen gör det trivialt att lägga till nya funktioner. Att lägga till en ny vy kräver bara en ny mapp i `app` och en rad i routern.
+* **Robusthet:** Kombinationen av strikta typer och en centraliserad felhantering i API-motorn gör applikationen mycket stabil.
 
-// TMDB-film typ från TMDB API
-export interface TMDBMovie {
-    id: number;
-    title: string;
-    overview: string;
-    poster_path: string;
-    release_date: string;
-    vote_average: number;
-}
+## Brister och Lärdomar
 
-// Film från din databas (sparade filmer med watchlist eller watched status)
-export interface DatabaseMovie {
-    id: number; // Databas-id
-    tmdb_id: number; // TMDB-id
-    title: string;
-    poster_path: string | null;
-    release_date: string | null;
-    vote_average: number | null;
-    overview: string | null;
-    status: MovieStatus;
-    personal_rating: number | null;
-    review: string | null;
-    is_favorite: number;
-    date_added: string;
-    date_watched: string | null;
-}
+Manuell DOM-hantering (Boilerplate): Applikationen är fullt reaktiv – UI uppdateras automatiskt när state ändras – men eftersom vi bygger DOM-elementen manuellt (utan JSX) krävs mycket repetitiv kod för att koppla ihop element med data. Detta gör komponentfilerna onödigt långa. I framtida projekt skulle vi använda ett bibliotek för att minska denna "boilerplate".
 
-// Typ som matchar serverns CreateMovieBody-interface
-export interface CreateMovieBody {
-    tmdb_id: number;
-    title: string;
-    poster_path: string;
-    release_date: string;
-    vote_average: number;
-    overview?: string;
-    status: MovieStatus;
-    personal_rating?: number | null;
-    review?: string | null;
-    is_favorite?: boolean;
-    date_watched?: string | null;
-}
-```
-
-
-
-### 4. Backend‑API‑integration
-
-Istället för att använda `localStorage` ska du nu prata med ett riktigt Express‑backend‑API:
-
-- Skicka HTTP‑requests (GET, POST, PUT, DELETE) för att spara och hämta data
-- Hantera loading‑state medan du väntar på svar
-- Hantera fel‑state när anrop misslyckas
-- Förstå uppdelningen mellan frontend och backend
-
-```typescript
-// src/services/movieApi.ts
-const API_BASE_URL = 'http://localhost:3000/api';
-
-// Exempel: funktion för att hämta watchlist
-// (Ni får själva välja hur ni strukturerar resterande anrop mot backend‑API:t.)
-
-export async function getWatchlist(): Promise<Movie[]> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/movies?status=watchlist`);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch watchlist');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching watchlist:', error);
-    throw error; // låt anropande kod hantera felet (t.ex. visa felmeddelande i UI:t)
-  }
-}
-```
-
-
-### 5. Felhantering
-
-- Visa användarvänliga felmeddelanden när API‑anrop misslyckas
-- Hantera loading‑state med t.ex. spinner eller skeleton‑UI
-- Validera användarinput för betyg och recensioner
-- Hantera saknade bilder snyggt (visa placeholder)
-
-
-
----
-
-## 🎨 UI/UX‑riktlinjer, tillgänglighet
-
-Sidan ska vara **responsiv**, följa **grundläggande tillgänglighetsprinciper** (kontrast, tangentbordsnavigering, tydliga länkar/knappar) och använda **enkla, konsekventa UI/UX‑mönster** så att användaren lätt förstår hur man söker, lägger till, markerar som sedd och redigerar filmer.
-
-
-
-## 🔌 Att arbeta mot backend‑API:t
-
-I det här projektet ska du arbeta mot en riktig Express‑server med SQLite‑databas.
-
-### Backend‑setup
-
-```bash
-# Terminal 1: Start the backend server
-cd server
-npm install
-npm run dev
-# Backend running on http://localhost:3000
-```
-
-```bash
-# Terminal 2: Start your frontend
-cd u06-vanilla-ts-project--filmlistan
-npm install
-npm run dev
-# Frontend running on http://localhost:5173
-```
-
-### Göra API‑anrop
-
-För exempel på hur ni anropar backend‑API:t, se `server/README.md` (curl‑exempel och frontend‑kod).  
-I denna uppgift räcker det att ni:
-
-- Läser vilka endpoints som finns (metod, URL, body, svar).
-- Skapar egna funktioner i `src/services/movieApi.ts` som anropar dessa endpoints med `fetch` och hanterar `loading`/fel i ert UI.
-
-
----
-
-## 🌟 Förslag på vidareutveckling (för er som vill mer)
-
-### Nivå 1: Förbättrade funktioner
-
-1. **Pagination/Load More**
-   - Implementera paginering för browse‑vyn
-   - Visa t.ex. 20 filmer per "sida" i browse‑vyn
-   - "Load more"‑knapp eller infinite scroll
-
-2. **Avancerad filtrering**
-   - Filtrera filmer på genre
-   - Filtrera på releaseår/årtionde
-   - Filtrera på betygsintervall
-   - Kombinera flera filter samtidigt
-
-3. **Personliga anteckningar på watchlist**
-   - Lägg till anteckningar på filmer i watchlisten
-   - T.ex. "Varför jag vill se den här"
-   - Redigera/ta bort anteckningar
-
-4. **Utökad watchlist‑funktionalitet**
-   - Lägg till prioritet per film (t.ex. High, Medium, Low)
-   - Lägg till/visa "Ta bort från Watchlist"‑knapp med bekräftelse
-   - Lägg till sorteringsalternativ i watchlist‑vyn:
-     - Efter datum tillagd (nyast/äldst)
-     - Efter releaseår
-     - Efter betyg (TMDB‑betyg)
-     - Efter titel (A–Ö)
-
-5. **Utökad watched‑vy (statistik och sortering)**
-   - Sortera sedda filmer efter datum sedd, ditt betyg eller titel
-   - Visa statistik över sedda filmer:
-     - Totalt antal sedda filmer
-     - Genomsnittligt personligt betyg
-     - Antal favoriter
-
-6. **Fler browse‑lägen**
-   - Lägg till möjlighet att växla mellan olika lägen i browse‑vyn
-   - T.ex. "Popular Movies", "Now Playing", "Top Rated", "Upcoming"
-
-
-7. **Statistik‑dashboard**
-   - Totalt antal sedda filmer
-   - Genomsnittligt personligt betyg
-   - Mest sedda genrer
-   - Filmer sedda denna månad/år
-   - Visuella diagram/grafer
-
-8. **Egna filmsamlingar (Custom Collections)** 
-   - Skapa egna filmsamlingar (t.ex. "Marvel MCU", "90-talsklassiker")
-
-
----
-
-## 📚 Resurser
-
-### TMDB‑API
-- [TMDB API Documentation](https://developers.themoviedb.org/3)
-- [Getting Started Guide](https://developers.themoviedb.org/3/getting-started/introduction)
-- [Image Configuration](https://developers.themoviedb.org/3/getting-started/images)
-
-
-### TypeScript
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
-- [Type vs Interface](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html)
-- [Utility Types](https://www.typescriptlang.org/docs/handbook/utility-types.html)
-
-
-### Fetch‑API
-- [MDN: Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
-- [MDN: async/await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
-
-
-
-
-
-
-
-
-
-
+Funktionskompletthet: På grund av tidsramen är inte alla features från uppgiftsbeskrivningen (t.ex. avancerad filtrering) helt implementerade i gränssnittet. Däremot är arkitekturen färdigställd för detta. Alla byggstenar (Action-hantering, Router-stöd och API-anrop) finns på plats, vilket gör det trivialt att koppla in den saknade funktionaliteten utan att behöva skriva om kärnkoden.
